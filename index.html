@@ -1,4 +1,3 @@
-formulario interativo_monitoria jun-26.html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -73,7 +72,49 @@ formulario interativo_monitoria jun-26.html
   .stat-n { font-size: 26px; font-weight: 800; color: var(--cyan); }
   .stat-l { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; letter-spacing: 0.05em; text-transform: uppercase; }
 
-  .filters { display: flex; gap: 8px; flex-wrap: wrap; padding: 20px 32px 0; align-items: center; }
+  /* Channel tabs */
+  .channel-tabs {
+    display: flex;
+    gap: 0;
+    padding: 20px 32px 0;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .channel-tab {
+    padding: 10px 28px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 2px solid var(--blue);
+    border-bottom: none;
+    background: white;
+    color: var(--blue);
+    border-radius: 10px 10px 0 0;
+    margin-right: 4px;
+    transition: all 0.2s;
+    opacity: 0.5;
+    letter-spacing: 0.03em;
+  }
+  .channel-tab.active {
+    background: var(--blue);
+    color: white;
+    opacity: 1;
+    box-shadow: 0 -2px 10px rgba(34,29,169,0.15);
+  }
+  .channel-tab:hover:not(.active) { opacity: 0.8; }
+
+  .channel-bar {
+    padding: 0 32px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .channel-divider {
+    height: 3px;
+    background: var(--blue);
+    border-radius: 0 0 2px 2px;
+  }
+
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; padding: 20px 32px 0; align-items: center; max-width: 900px; margin: 0 auto; }
   .filter-label { font-size: 12px; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
   .filter-btn { padding: 6px 14px; border-radius: 20px; border: 2px solid transparent; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; letter-spacing: 0.04em; text-transform: uppercase; }
   .filter-btn.all { background: var(--blue); color: white; border-color: var(--blue); }
@@ -84,7 +125,7 @@ formulario interativo_monitoria jun-26.html
   .filter-btn:not(.active) { opacity: 0.45; }
   .filter-btn.active { opacity: 1; }
 
-  main { padding: 24px 32px 60px; max-width: 900px; margin: 0 auto; }
+  main { padding: 16px 32px 60px; max-width: 900px; margin: 0 auto; }
 
   .card { background: white; border-radius: 14px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(34,29,169,0.07); overflow: hidden; transition: box-shadow 0.2s; border: 1.5px solid transparent; }
   .card:hover { box-shadow: 0 4px 20px rgba(34,29,169,0.13); }
@@ -159,27 +200,34 @@ formulario interativo_monitoria jun-26.html
 
 <header>
   <div class="header-inner">
-    <div class="logo-pin"><img src="data:image/png;base64,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" alt="Turbi"></div>
+    <div class="logo-pin"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAYAAAA5ZDbSAAAABmJLR0QA/wD/AP+gvaeTAAAI5UlEQVR4nO2cW4xdZRXHf2vm9DKlF+gNA95KBSMgxgtCfDCmVowX0Adv8RKIFnxQglEgRU2IJPoCvojiBYkK0ZgoGKLWvniDEq+h0AIFSrFUaluk2MsMnds5fx/WPu3pnm+f2XvOPjAl65fsTGb23utb+7uutb71DQRBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBEARBnVj+D5JWAOuAJblbTeAx4Kdm1pQ0eFSIWbMOZSQZMAg0UroByvRomlmrotyBgtstM1NVXXPyVwHvA05nqt5bgY1mtj+rs8GELi1gsso3dZT9fuB6YHGu7HHgK/mHByTdIOmQpJHcNSxtp6SLqirxUkfSFZK2JepsRNJDkt7cx7LvlDQmqaXjaUl6qJF73oBXA4sK5E0CL+uXsicwQ8BJwILEvcX4jNQvVpGe8Qx4bWraKprK2i8NdrkfTCW11NRJt/ZodGvMFO01MDgxaFVt4CbwVD80CWbM47iRlmJblbVhEngU+HvPKgV1cj2+/p/J8cvBM8D6sg3cAnYAXzCzI/XqF/TIo8DHmWrItYBDDUlzgbdmDwwCp3Y8JGAU+BtwB7BE0jtKFPo8sPVE7AxZfZyMj4r8EibgWeBwBd855ffWhpm1JI0DSzl+BO8zs8kG3nDv7rgxlJMxH3gb8Cb8A8swCmyQtK7TeZe0CHgP3uPmdjzfxAMC3zOzXdMJl7QMuAT4QE7OJHAfHox5uoyiWRDkrEyvtcDZHAsapCzgHcB64Pdl5OMD5muSdmT65WkBB4En8eVvu5lNlJSNpPOBH+Pua6e+hyRdiqTDqp+WpM2SFuaUOVfSg5ImEte/Ja0v+VFrJT1QIOcJSZeXlPM6Sd+StEvS89n7LU0NGnQyKelKSQs65FyVyShiQh6MSF2jko7IgyIHJd0n6TPywVDmG+6SNJ7QuSXp3gYwp4ygirT95fwIaOAh0NTaPx9YmPh7inl4MCYlpyjgcBT5NPwh4GrgHLwOyvqr7XBjFf+2rK0j4ALgjcClkq4G7jez1Mhvs6pAn6OBjn474nnqKm9GcrKR91ngG8Ab8Cn+ha6DItoDYwhfFu8GLpY0r8s73db3gb4t/rMRSQ3gk8CXgFfSR+OnBtoG723AGkkzmmkHcIu3boQbD7Mt6rUW+DTeuLNl1HbDcIv+FuAMuUFYiQZwHd6j52S/n97l+RZwmOk7xX7gVjPrR+dpU2mLT9JpwAeB8+itcSeA4exnWZoUd/a2G1WkkwGvAq4Fvohb3KVpAN8Hbu34/U58bzOPgD24UTJcQnblvc0+83ZgDdM37m7ggexnqhE3AxvMbLxkuQeBT+BuVcpYauCu2edxwy9lPVsm4xZJm6vsGzcyh70JIKmtUBGTZlapB1VggP5Y9Eg6BXgLsJriBt6DT4U/BPYVyZpBcsBhYL+ZjRbcnwTul7QOT6i4BliWeK5t+T9GuQEGpI2Mbh8wW0blANX2WM/ER0mRUbUXuAG40cz2mqmKrhnqO+172aj8Jh7sSM0OBrwLdydLU8WKFOkp5sWg6hr6ctywSiHgV8CvzWysJ616JPN3fwMcKnjkbKZGGruSauAqxsOJwlLS0x54ZW41s90voD7d2ENxGwwByyWVHphVp+gTlfkU9/wDVLRMX2QqBWZms6NfJ0UbB+Ad+qXYqYHZ1cDdGqHo+dlCt05S93dV6oxVp2ibSTSlJPOBU9WRb50iW3+WAKfUVG4do7db4GMpsKjCunkaxe6icJuhtDeTKrTIxzLcCX9FWeEJulniQ8C5wIVFlZF1rtV40KJo56lqiLRJ7+7fbtzfTTGEB1hWTidE0hDwXorTlvcBB6q4a6mMhScLnjV8I/w6SYsoXNeubTaQ7t+BhvsLLJFuBe4B7gTeAcfBhkKdhkdUsXW48XLPsKZ+zYhRVbpuSVpVWjFcDr2E7KrSxEZlHfKRa9E6WIbVDIoBwZ7XWvgPsL2FOHJ8ADgAAAABJRU5ErkJggg==" alt="Turbi"></div>
   </div>
 </header>
 
 <div class="hero">
   <h1>Formulário de Monitoria<br>de Qualidade</h1>
   <p>Clique em cada critério para ver a pergunta de avaliação, objetivo e exemplos práticos de o que fazer e o que não fazer.</p>
-  <div class="hero-stats">
-    <div class="stat"><div class="stat-n">6</div><div class="stat-l">Critérios</div></div>
-    <div class="stat"><div class="stat-n">4</div><div class="stat-l">Blocos</div></div>
+  <div class="hero-stats" id="hero-stats">
+    <div class="stat"><div class="stat-n" id="stat-criterios">6</div><div class="stat-l">Critérios</div></div>
+    <div class="stat"><div class="stat-n" id="stat-blocos">4</div><div class="stat-l">Blocos</div></div>
     <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Pontuação máx.</div></div>
   </div>
 </div>
 
-<div class="filters">
+<!-- Channel tabs -->
+<div class="channel-tabs">
+  <button class="channel-tab active" id="tab-sincrono" onclick="switchChannel('sincrono')">📞 Síncrono</button>
+  <button class="channel-tab" id="tab-assincrono" onclick="switchChannel('assincrono')">💬 Assíncrono</button>
+</div>
+<div class="channel-bar"><div class="channel-divider"></div></div>
+
+<div class="filters" id="filters-container">
   <span class="filter-label">Filtrar:</span>
-  <button class="filter-btn all active" onclick="filterCards('all', this)">Todos</button>
+  <button class="filter-btn all" onclick="filterCards('all', this)">Todos</button>
   <button class="filter-btn conduao active" onclick="filterCards('conduao', this)">Condução</button>
-  <button class="filter-btn processos active" onclick="filterCards('processos', this)">Processos</button>
-  <button class="filter-btn comportamento active" onclick="filterCards('comportamento', this)">Comportamento</button>
-  <button class="filter-btn compliance active" onclick="filterCards('compliance', this)">Compliance</button>
+  <button id="btn-processos" class="filter-btn processos" onclick="filterCards('processos', this)">Processos</button>
+  <button class="filter-btn comportamento" onclick="filterCards('comportamento', this)">Comportamento</button>
+  <button class="filter-btn compliance" onclick="filterCards('compliance', this)">Compliance</button>
 </div>
 
 <main id="cards-container"></main>
@@ -187,73 +235,167 @@ formulario interativo_monitoria jun-26.html
 <footer>turbi · Formulário de Monitoria de Qualidade · Junho 2026 · Uso interno</footer>
 
 <script>
-const criteria = [
-  {
-    num: 1, bloco: "CONDUÇÃO", cat: "conduao",
-    pergunta: "A comunicação do agente foi clara e o cliente compreendeu a mensagem transmitida?",
-    objetivo: "Garantir que o cliente saia do contato com a informação corretamente assimilada, sem necessidade de recontato para esclarecimento da mesma dúvida. Mensagens ambíguas, técnicas ou incompletas impactam diretamente a satisfação e o volume de chamados.",
-    valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
-    definicao: "O cliente deve sair sem dúvidas e com uma solução direta. O agente usa palavras simples, organiza a explicação de forma lógica e confirma o entendimento antes de finalizar. Evitar: respostas monossilábicas ('ok', 'certo'), repetição da mesma justificativa quando o cliente não entendeu.",
-    fazer: `Cliente pergunta: 'Então meu carro vai ser trocado?'\n\nAgente: 'Sim! Vou abrir o chamado agora mesmo para a troca. Você receberá uma notificação no app em até 2 horas com o local de retirada do novo veículo. Tem mais alguma dúvida?'\n\n→ Cliente responde: 'Perfeito, obrigado!' ✓\nInformação completa, confirmação clara.`,
-    nao_fazer: `Cliente: 'Não entendi como funciona o desbloqueio.'\n\nAgente: 'O desbloqueio é feito pelo app, como já mencionei na mensagem anterior.'\n\n→ Repete a mesma resposta sem adaptar a explicação. ✗\n\nOutro exemplo ✗: Agente usa termos técnicos internos: 'Sua reserva está com status CKI pendente no sistema.'`
-  },
-  {
-    num: 2, bloco: "CONDUÇÃO", cat: "conduao",
-    pergunta: "O agente respondeu a todas as perguntas e solicitações feitas pelo cliente?",
-    objetivo: "Assegurar que nenhum questionamento — explícito ou implícito — fique sem resposta ao longo do atendimento. Perguntas ignoradas geram recontatos, insatisfação e baixa percepção de resolutividade (First Contact Resolution).",
-    valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
-    definicao: "O agente lê toda a mensagem do cliente antes de responder e garante que cada dúvida seja endereçada. Quando há encaminhamento (prazo, chamado aberto), isso também conta como resposta válida. Evitar: inativar o chat com perguntas pendentes, enviar prints sem contexto.",
-    fazer: `Cliente: 'Quanto tempo leva a troca? E minha caução vai ser devolvida?'\n\nAgente: 'A troca de veículo leva em média 24h úteis após a aprovação do chamado. Sobre a caução: ela é liberada em até 7 dias úteis após a devolução do carro atual. Posso ajudar com mais alguma coisa?'\n\n→ Ambas as perguntas foram respondidas de forma completa. ✓`,
-    nao_fazer: `Cliente: 'Quando meu carro fica pronto? E como faço para pegar o carro novo?'\n\nAgente: 'Seu carro fica pronto em 2 dias.'\n\n→ A segunda pergunta ('como pego o carro novo?') foi ignorada. ✗\n\nOutro exemplo ✗: Agente envia print de tela sem explicar o que o cliente deve observar.`
-  },
-  {
-    num: 3, bloco: "PROCESSOS", cat: "processos",
-    pergunta: "O agente orientou o cliente a utilizar o autoatendimento quando o processo estava disponível no app?",
-    objetivo: "Fomentar a autonomia digital do cliente, reduzindo dependência do suporte humano para processos que podem ser resolvidos via app. Impacta diretamente a taxa de contato e a eficiência operacional.",
-    valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
-    definicao: "Para processos disponíveis no app, o agente orienta o passo a passo antes de resolver. Se o cliente já sabe como fazer ou confirma que vai realizar, avaliar como N/A. O documento de processos de autoatendimento deve ser consultado e atualizado sempre que novos processos forem lançados.",
-    fazer: `Cliente: 'Preciso atualizar minha forma de pagamento.'\n\nAgente: 'Você pode fazer isso direto no app! Vá em Perfil > Pagamentos > Adicionar cartão. É rápido e fica disponível para sua próxima reserva. Quer que eu te ajude com mais alguma coisa?'\n\n→ Orientou o autoatendimento antes de oferecer qualquer outra solução. ✓`,
-    nao_fazer: `Cliente: 'Quero cancelar minha reserva.'\n\nAgente: 'Ok, vou cancelar para você.' [cancela pelo sistema]\n\n→ Não orientou que o cliente poderia cancelar diretamente pelo app. ✗\n\nOutro exemplo ✗: Escalou para outro canal sem antes informar que a solicitação poderia ser feita pelo app.`
-  },
-  {
-    num: 4, bloco: "COMPORTAMENTO", cat: "comportamento",
-    pergunta: "O agente encerrou o atendimento de forma abrupta, sem despedida ou com perguntas do cliente sem resposta?",
-    objetivo: "Garantir que todo atendimento seja encerrado com qualidade — com uma despedida adequada e apenas após confirmar que o cliente não tem mais dúvidas. Encerramentos abruptos geram insatisfação imediata e impactam CSAT, NPS e a imagem da marca.",
-    valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−20%",
-    definicao: "Todo atendimento deve ser encerrado com: (1) confirmação de que a demanda foi resolvida, (2) verificação se o cliente tem mais dúvidas, (3) frase de despedida. Não confundir com: inatividade do sistema, transferência para outro agente, ou retorno do cliente após pausa.",
-    fazer: `Agente: 'Seu chamado foi aberto com número #4521. Você receberá uma atualização em até 24h. Posso ajudar com mais alguma coisa?'\nCliente: 'Não, obrigado.'\nAgente: 'Ótimo! Fico à disposição. Tenha um ótimo dia! 😊' ✓`,
-    nao_fazer: `Agente: 'Seu chamado foi registrado.' [encerra o chat]\n\n→ Nenhuma verificação se o cliente tem dúvidas, sem despedida. ✗\n\nAtenção — NÃO pontuar como SIM:\n• Última mensagem: 'Este atendimento foi encerrado automaticamente por inatividade.' [mensagem do sistema]\n• Agente retorna após pausa: 'Olá! Posso te ajudar?' [reinício = novo atendimento]`
-  },
-  {
-    num: 5, bloco: "COMPORTAMENTO", cat: "comportamento",
-    pergunta: "O agente demonstrou descaso, frieza, deboche ou sarcasmo durante o atendimento?",
-    objetivo: "Garantir que o tom do agente seja empático, respeitoso e profissional em todas as interações. Comportamentos de descaso ou deboche comprometem a experiência do cliente e a imagem da Turbi, podendo gerar escaladas, reclamações públicas e cancelamentos.",
-    valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−20%",
-    definicao: "O agente deve demonstrar empatia e senso de urgência compatível com a situação do cliente — especialmente em casos de reclamações ou problemas operacionais graves. Respostas curtas e mecânicas, sem acolhimento, podem ser interpretadas como frieza mesmo sem intenção.",
-    fazer: `Cliente: 'Estou há 3 dias tentando resolver isso e ninguém me ajuda!'\n\nAgente: 'Entendo sua frustração e me desculpe pela demora. Vou priorizar seu caso agora mesmo e garantir que você tenha uma resposta até hoje. Pode me confirmar o número do chamado?'\n\n→ Tom empático, reconhece o problema, oferece ação concreta. ✓`,
-    nao_fazer: `Cliente: 'Isso é um absurdo, nunca funciona nada!'\n\nAgente: 'Já expliquei como funciona. Se tiver mais dúvidas, é só chamar.'\n\n→ Tom frio e dismissivo, sem acolhimento da insatisfação. ✗\n\nOutro exemplo ✗: Agente responde com 'Ok.' ou 'Entendido.' para reclamações graves, sem demonstrar empatia.`
-  },
-  {
-    num: 6, bloco: "COMPLIANCE", cat: "compliance",
-    pergunta: "O agente compartilhou ou confirmou dados pessoais sensíveis sem seguir o protocolo de verificação de identidade?",
-    objetivo: "Proteger os dados dos clientes e a Turbi de violações de privacidade e LGPD. O compartilhamento indevido de dados sensíveis gera riscos jurídicos, perda de confiança e danos à reputação.",
-    valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−100%",
-    definicao: "O agente deve verificar a identidade do cliente antes de confirmar ou compartilhar qualquer dado sensível (CPF, dados bancários, endereço, dados do veículo). Nunca compartilhar dados de terceiros. Em caso de dúvida, escalar para supervisão.",
-    fazer: `Correto (NÃO houve violação) ✓:\nAgente: 'Para confirmar sua identidade, pode me informar o CPF cadastrado e o e-mail da conta?'\nCliente: [fornece os dados]\nAgente: 'Confirmado! Agora posso te ajudar com os detalhes da sua reserva.'\n\n→ Verificação de identidade realizada antes de compartilhar informações. ✓`,
-    nao_fazer: `Cliente: 'Qual é o CPF do motorista que estava no carro antes de mim?'\n\nAgente: 'O CPF dele é 123.456.789-00.'\n\n→ Compartilhou dados de terceiro sem nenhuma justificativa ou protocolo. ✗ Violação grave de LGPD.\n\nOutro exemplo ✗: Agente confirma dados bancários do cliente sem verificar identidade previamente.`
-  }
-];
+const criteriaAll = {
+  sincrono: [
+    {
+      num: 1, bloco: "CONDUÇÃO", cat: "conduao",
+      pergunta: "A comunicação do agente foi clara e o cliente compreendeu a mensagem transmitida?",
+      objetivo: "Garantir que o cliente saia do contato com a informação corretamente assimilada, sem necessidade de recontato para esclarecimento da mesma dúvida. Mensagens ambíguas, técnicas ou incompletas impactam diretamente a satisfação e o volume de chamados.",
+      valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
+      definicao: "O cliente deve sair sem dúvidas e com uma solução direta. O agente usa palavras simples, organiza a explicação de forma lógica e confirma o entendimento antes de finalizar. Evitar: respostas monossilábicas ('ok', 'certo'), repetição da mesma justificativa quando o cliente não entendeu.",
+      fazer: `Cliente pergunta: 'Então meu carro vai ser trocado?'\n\nAgente: 'Sim! Vou abrir o chamado agora mesmo para a troca. Você receberá uma notificação no app em até 2 horas com o local de retirada do novo veículo. Tem mais alguma dúvida?'\n\n→ Cliente responde: 'Perfeito, obrigado!' ✓\nInformação completa, confirmação clara.`,
+      nao_fazer: `Cliente: 'Não entendi como funciona o desbloqueio.'\n\nAgente: 'O desbloqueio é feito pelo app, como já mencionei na mensagem anterior.'\n\n→ Repete a mesma resposta sem adaptar a explicação. ✗\n\nOutro exemplo ✗: Agente usa termos técnicos internos: 'Sua reserva está com status CKI pendente no sistema.'`
+    },
+    {
+      num: 2, bloco: "CONDUÇÃO", cat: "conduao",
+      pergunta: "O agente respondeu a todas as perguntas e solicitações feitas pelo cliente?",
+      objetivo: "Assegurar que nenhum questionamento — explícito ou implícito — fique sem resposta ao longo do atendimento. Perguntas ignoradas geram recontatos, insatisfação e baixa percepção de resolutividade (First Contact Resolution).",
+      valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
+      definicao: "O agente lê toda a mensagem do cliente antes de responder e garante que cada dúvida seja endereçada. Quando há encaminhamento (prazo, chamado aberto), isso também conta como resposta válida. Evitar: inativar o chat com perguntas pendentes, enviar prints sem contexto.",
+      fazer: `Cliente: 'Quanto tempo leva a troca? E minha caução vai ser devolvida?'\n\nAgente: 'A troca de veículo leva em média 24h úteis após a aprovação do chamado. Sobre a caução: ela é liberada em até 7 dias úteis após a devolução do carro atual. Posso ajudar com mais alguma coisa?'\n\n→ Ambas as perguntas foram respondidas de forma completa. ✓`,
+      nao_fazer: `Cliente: 'Quando meu carro fica pronto? E como faço para pegar o carro novo?'\n\nAgente: 'Seu carro fica pronto em 2 dias.'\n\n→ A segunda pergunta ('como pego o carro novo?') foi ignorada. ✗\n\nOutro exemplo ✗: Agente envia print de tela sem explicar o que o cliente deve observar.`
+    },
+    {
+      num: 3, bloco: "PROCESSOS", cat: "processos",
+      pergunta: "O agente orientou o cliente a utilizar o autoatendimento quando o processo estava disponível no app?",
+      objetivo: "Fomentar a autonomia digital do cliente, reduzindo dependência do suporte humano para processos que podem ser resolvidos via app. Impacta diretamente a taxa de contato e a eficiência operacional.",
+      valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
+      definicao: "Para processos disponíveis no app, o agente orienta o passo a passo antes de resolver. Se o cliente já sabe como fazer ou confirma que vai realizar, avaliar como N/A. O documento de processos de autoatendimento deve ser consultado e atualizado sempre que novos processos forem lançados.",
+      fazer: `Cliente: 'Preciso atualizar minha forma de pagamento.'\n\nAgente: 'Você pode fazer isso direto no app! Vá em Perfil > Pagamentos > Adicionar cartão. É rápido e fica disponível para sua próxima reserva. Quer que eu te ajude com mais alguma coisa?'\n\n→ Orientou o autoatendimento antes de oferecer qualquer outra solução. ✓`,
+      nao_fazer: `Cliente: 'Quero cancelar minha reserva.'\n\nAgente: 'Ok, vou cancelar para você.' [cancela pelo sistema]\n\n→ Não orientou que o cliente poderia cancelar diretamente pelo app. ✗\n\nOutro exemplo ✗: Escalou para outro canal sem antes informar que a solicitação poderia ser feita pelo app.`
+    },
+    {
+      num: 4, bloco: "COMPORTAMENTO", cat: "comportamento",
+      pergunta: "O agente encerrou o atendimento de forma abrupta, sem despedida ou com perguntas do cliente sem resposta?",
+      objetivo: "Garantir que todo atendimento seja encerrado com qualidade — com uma despedida adequada e apenas após confirmar que o cliente não tem mais dúvidas. Encerramentos abruptos geram insatisfação imediata e impactam CSAT, NPS e a imagem da marca.",
+      valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−20%",
+      definicao: "Todo atendimento deve ser encerrado com: (1) confirmação de que a demanda foi resolvida, (2) verificação se o cliente tem mais dúvidas, (3) frase de despedida. Não confundir com: inatividade do sistema, transferência para outro agente, ou retorno do cliente após pausa.",
+      fazer: `Agente: 'Seu chamado foi aberto com número #4521. Você receberá uma atualização em até 24h. Posso ajudar com mais alguma coisa?'\nCliente: 'Não, obrigado.'\nAgente: 'Ótimo! Fico à disposição. Tenha um ótimo dia! 😊' ✓`,
+      nao_fazer: `Agente: 'Seu chamado foi registrado.' [encerra o chat]\n\n→ Nenhuma verificação se o cliente tem dúvidas, sem despedida. ✗\n\nAtenção — NÃO pontuar como SIM:\n• Última mensagem: 'Este atendimento foi encerrado automaticamente por inatividade.' [mensagem do sistema]\n• Agente retorna após pausa: 'Olá! Posso te ajudar?' [reinício = novo atendimento]`
+    },
+    {
+      num: 5, bloco: "COMPORTAMENTO", cat: "comportamento",
+      pergunta: "O agente demonstrou descaso, frieza, deboche ou sarcasmo durante o atendimento?",
+      objetivo: "Garantir que o tom do agente seja empático, respeitoso e profissional em todas as interações. Comportamentos de descaso ou deboche comprometem a experiência do cliente e a imagem da Turbi, podendo gerar escaladas, reclamações públicas e cancelamentos.",
+      valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−20%",
+      definicao: "O agente deve demonstrar empatia e senso de urgência compatível com a situação do cliente — especialmente em casos de reclamações ou problemas operacionais graves. Respostas curtas e mecânicas, sem acolhimento, podem ser interpretadas como frieza mesmo sem intenção.",
+      fazer: `Cliente: 'Estou há 3 dias tentando resolver isso e ninguém me ajuda!'\n\nAgente: 'Entendo sua frustração e me desculpe pela demora. Vou priorizar seu caso agora mesmo e garantir que você tenha uma resposta até hoje. Pode me confirmar o número do chamado?'\n\n→ Tom empático, reconhece o problema, oferece ação concreta. ✓`,
+      nao_fazer: `Cliente: 'Isso é um absurdo, nunca funciona nada!'\n\nAgente: 'Já expliquei como funciona. Se tiver mais dúvidas, é só chamar.'\n\n→ Tom frio e dismissivo, sem acolhimento da insatisfação. ✗\n\nOutro exemplo ✗: Agente responde com 'Ok.' ou 'Entendido.' para reclamações graves, sem demonstrar empatia.`
+    },
+    {
+      num: 6, bloco: "COMPLIANCE", cat: "compliance",
+      pergunta: "O agente compartilhou ou confirmou dados pessoais sensíveis sem seguir o protocolo de verificação de identidade?",
+      objetivo: "Proteger os dados dos clientes e a Turbi de violações de privacidade e LGPD. O compartilhamento indevido de dados sensíveis gera riscos jurídicos, perda de confiança e danos à reputação.",
+      valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−100%",
+      definicao: "O agente deve verificar a identidade do cliente antes de confirmar ou compartilhar qualquer dado sensível (CPF, dados bancários, endereço, dados do veículo). Nunca compartilhar dados de terceiros. Em caso de dúvida, escalar para supervisão.",
+      fazer: `Correto (NÃO houve violação) ✓:\nAgente: 'Para confirmar sua identidade, pode me informar o CPF cadastrado e o e-mail da conta?'\nCliente: [fornece os dados]\nAgente: 'Confirmado! Agora posso te ajudar com os detalhes da sua reserva.'\n\n→ Verificação de identidade realizada antes de compartilhar informações. ✓`,
+      nao_fazer: `Cliente: 'Qual é o CPF do motorista que estava no carro antes de mim?'\n\nAgente: 'O CPF dele é 123.456.789-00.'\n\n→ Compartilhou dados de terceiro sem nenhuma justificativa ou protocolo. ✗ Violação grave de LGPD.\n\nOutro exemplo ✗: Agente confirma dados bancários do cliente sem verificar identidade previamente.`
+    }
+  ],
+  assincrono: [
+    {
+      num: 1, bloco: "CONDUÇÃO", cat: "conduao",
+      pergunta: "A comunicação do agente foi clara e o cliente compreendeu a mensagem transmitida?",
+      objetivo: "Garantir que o cliente saia do contato com a informação corretamente assimilada, sem necessidade de recontato para esclarecimento da mesma dúvida. Mensagens ambíguas, técnicas ou incompletas impactam diretamente a satisfação e o volume de chamados.",
+      valor_padrao: "SIM", pts_pos: "+25%", var_neg: "NÃO", pts_neg: "−25%",
+      definicao: "O cliente deve sair sem dúvidas e com uma solução direta. O agente usa palavras simples, organiza a explicação de forma lógica e confirma o entendimento antes de finalizar. Evitar: respostas monossilábicas ('ok', 'certo'), repetição da mesma justificativa quando o cliente não entendeu.",
+      fazer: `Cliente pergunta: 'Então meu carro vai ser trocado?'\n\nAgente: 'Sim! Vou abrir o chamado agora mesmo para a troca. Você receberá uma notificação no app em até 2 horas com o local de retirada do novo veículo. Tem mais alguma dúvida?'\n\n→ Cliente responde: 'Perfeito, obrigado!' ✓\nInformação completa, confirmação clara.`,
+      nao_fazer: `Cliente: 'Não entendi como funciona o desbloqueio.'\n\nAgente: 'O desbloqueio é feito pelo app, como já mencionei na mensagem anterior.'\n\n→ Repete a mesma resposta sem adaptar a explicação. ✗\n\nOutro exemplo ✗: Agente usa termos técnicos internos: 'Sua reserva está com status CKI pendente no sistema.'`
+    },
+    {
+      num: 2, bloco: "CONDUÇÃO", cat: "conduao",
+      pergunta: "O agente respondeu a todas as perguntas e solicitações feitas pelo cliente?",
+      objetivo: "Assegurar que nenhum questionamento — explícito ou implícito — fique sem resposta ao longo do atendimento. Perguntas ignoradas geram recontatos, insatisfação e baixa percepção de resolutividade (First Contact Resolution).",
+      valor_padrao: "SIM", pts_pos: "+25%", var_neg: "NÃO", pts_neg: "−25%",
+      definicao: "O agente lê toda a mensagem do cliente antes de responder e garante que cada dúvida seja endereçada. Quando há encaminhamento (prazo, chamado aberto), isso também conta como resposta válida. Evitar: inativar o chat com perguntas pendentes, enviar prints sem contexto.",
+      fazer: `Cliente: 'Quanto tempo leva a troca? E minha caução vai ser devolvida?'\n\nAgente: 'A troca de veículo leva em média 24h úteis após a aprovação do chamado. Sobre a caução: ela é liberada em até 7 dias úteis após a devolução do carro atual. Posso ajudar com mais alguma coisa?'\n\n→ Ambas as perguntas foram respondidas de forma completa. ✓`,
+      nao_fazer: `Cliente: 'Quando meu carro fica pronto? E como faço para pegar o carro novo?'\n\nAgente: 'Seu carro fica pronto em 2 dias.'\n\n→ A segunda pergunta ('como pego o carro novo?') foi ignorada. ✗\n\nOutro exemplo ✗: Agente envia print de tela sem explicar o que o cliente deve observar.`
+    },
+    {
+      num: 3, bloco: "COMPORTAMENTO", cat: "comportamento",
+      pergunta: "O agente encerrou o atendimento de forma abrupta, sem despedida ou com perguntas do cliente sem resposta?",
+      objetivo: "Garantir que todo atendimento seja encerrado com qualidade — com uma despedida adequada e apenas após confirmar que o cliente não tem mais dúvidas. Encerramentos abruptos geram insatisfação imediata e impactam CSAT, NPS e a imagem da marca.",
+      valor_padrao: "NÃO", pts_pos: "+25%", var_neg: "SIM", pts_neg: "−25%",
+      definicao: "Todo atendimento deve ser encerrado com: (1) confirmação de que a demanda foi resolvida, (2) verificação se o cliente tem mais dúvidas, (3) frase de despedida. Não confundir com: inatividade do sistema, transferência para outro agente, ou retorno do cliente após pausa.",
+      fazer: `Agente: 'Seu chamado foi aberto com número #4521. Você receberá uma atualização em até 24h. Posso ajudar com mais alguma coisa?'\nCliente: 'Não, obrigado.'\nAgente: 'Ótimo! Fico à disposição. Tenha um ótimo dia! 😊' ✓`,
+      nao_fazer: `Agente: 'Seu chamado foi registrado.' [encerra o chat]\n\n→ Nenhuma verificação se o cliente tem dúvidas, sem despedida. ✗\n\nAtenção — NÃO pontuar como SIM:\n• Última mensagem: 'Este atendimento foi encerrado automaticamente por inatividade.' [mensagem do sistema]\n• Agente retorna após pausa: 'Olá! Posso te ajudar?' [reinício = novo atendimento]`
+    },
+    {
+      num: 4, bloco: "COMPORTAMENTO", cat: "comportamento",
+      pergunta: "O agente demonstrou descaso, frieza, deboche ou sarcasmo durante o atendimento?",
+      objetivo: "Garantir que o tom do agente seja empático, respeitoso e profissional em todas as interações. Comportamentos de descaso ou deboche comprometem a experiência do cliente e a imagem da Turbi, podendo gerar escaladas, reclamações públicas e cancelamentos.",
+      valor_padrao: "NÃO", pts_pos: "+25%", var_neg: "SIM", pts_neg: "−25%",
+      definicao: "O agente deve demonstrar empatia e senso de urgência compatível com a situação do cliente — especialmente em casos de reclamações ou problemas operacionais graves. Respostas curtas e mecânicas, sem acolhimento, podem ser interpretadas como frieza mesmo sem intenção.",
+      fazer: `Cliente: 'Estou há 3 dias tentando resolver isso e ninguém me ajuda!'\n\nAgente: 'Entendo sua frustração e me desculpe pela demora. Vou priorizar seu caso agora mesmo e garantir que você tenha uma resposta até hoje. Pode me confirmar o número do chamado?'\n\n→ Tom empático, reconhece o problema, oferece ação concreta. ✓`,
+      nao_fazer: `Cliente: 'Isso é um absurdo, nunca funciona nada!'\n\nAgente: 'Já expliquei como funciona. Se tiver mais dúvidas, é só chamar.'\n\n→ Tom frio e dismissivo, sem acolhimento da insatisfação. ✗\n\nOutro exemplo ✗: Agente responde com 'Ok.' ou 'Entendido.' para reclamações graves, sem demonstrar empatia.`
+    },
+    {
+      num: 5, bloco: "COMPLIANCE", cat: "compliance",
+      pergunta: "O agente compartilhou ou confirmou dados pessoais sensíveis sem seguir o protocolo de verificação de identidade?",
+      objetivo: "Proteger os dados dos clientes e a Turbi de violações de privacidade e LGPD. O compartilhamento indevido de dados sensíveis gera riscos jurídicos, perda de confiança e danos à reputação.",
+      valor_padrao: "NÃO", pts_pos: "+25%", var_neg: "SIM", pts_neg: "−100%",
+      definicao: "O agente deve verificar a identidade do cliente antes de confirmar ou compartilhar qualquer dado sensível (CPF, dados bancários, endereço, dados do veículo). Nunca compartilhar dados de terceiros. Em caso de dúvida, escalar para supervisão.",
+      fazer: `Correto (NÃO houve violação) ✓:\nAgente: 'Para confirmar sua identidade, pode me informar o CPF cadastrado e o e-mail da conta?'\nCliente: [fornece os dados]\nAgente: 'Confirmado! Agora posso te ajudar com os detalhes da sua reserva.'\n\n→ Verificação de identidade realizada antes de compartilhar informações. ✓`,
+      nao_fazer: `Cliente: 'Qual é o CPF do motorista que estava no carro antes de mim?'\n\nAgente: 'O CPF dele é 123.456.789-00.'\n\n→ Compartilhou dados de terceiro sem nenhuma justificativa ou protocolo. ✗ Violação grave de LGPD.\n\nOutro exemplo ✗: Agente confirma dados bancários do cliente sem verificar identidade previamente.`
+    }
+  ]
+};
 
-function buildCards() {
+let currentChannel = 'sincrono';
+let cardIdCounter = 0;
+
+function switchChannel(channel) {
+  currentChannel = channel;
+
+  // update tab styles
+  document.getElementById('tab-sincrono').classList.toggle('active', channel === 'sincrono');
+  document.getElementById('tab-assincrono').classList.toggle('active', channel === 'assincrono');
+
+  // update stats
+  const criteria = criteriaAll[channel];
+  const blocos = new Set(criteria.map(c => c.bloco)).size;
+  document.getElementById('stat-criterios').textContent = criteria.length;
+  document.getElementById('stat-blocos').textContent = blocos;
+
+  // show/hide processos filter
+  const btnProcessos = document.getElementById('btn-processos');
+  btnProcessos.style.display = channel === 'sincrono' ? '' : 'none';
+
+  // rebuild cards
+  buildCards(channel);
+
+  // reset filter to conduao
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn.conduao').classList.add('active');
+  document.querySelectorAll('#cards-container .card').forEach(card => {
+    card.style.display = card.dataset.cat === 'conduao' ? 'block' : 'none';
+  });
+  const first = document.querySelector('#cards-container .card[data-cat="conduao"]');
+  if (first) {
+    const body = first.querySelector('.card-body');
+    first.classList.add('open');
+    body.style.maxHeight = '9999px';
+    setTimeout(() => { body.style.maxHeight = body.scrollHeight + 'px'; }, 50);
+  }
+}
+
+function buildCards(channel) {
   const container = document.getElementById('cards-container');
-  criteria.forEach(c => {
+  container.innerHTML = '';
+  cardIdCounter++;
+  const prefix = channel + '_' + cardIdCounter + '_';
+
+  criteriaAll[channel].forEach(c => {
     const card = document.createElement('div');
     card.className = `card ${c.cat}`;
     card.dataset.cat = c.cat;
 
-    const scoreDisplay = c.num === 6
+    const scoreDisplay = c.cat === 'compliance'
       ? `${c.var_neg} = ${c.pts_neg}`
       : `${c.valor_padrao} = ${c.pts_pos} · ${c.var_neg} = ${c.pts_neg}`;
+
+    const objId = prefix + 'obj-' + c.num;
+    const exId = prefix + 'ex-' + c.num;
 
     card.innerHTML = `
       <div class="card-trigger" onclick="toggleCard(this)">
@@ -269,10 +411,10 @@ function buildCards() {
       <div class="card-body">
         <div class="card-body-inner">
           <div class="steps">
-            <div class="step active" onclick="switchTab(this, 'obj-${c.num}')">① Objetivo</div>
-            <div class="step" onclick="switchTab(this, 'ex-${c.num}')">② O que fazer / não fazer</div>
+            <div class="step active" onclick="switchTab(this, '${objId}')">① Objetivo</div>
+            <div class="step" onclick="switchTab(this, '${exId}')">② O que fazer / não fazer</div>
           </div>
-          <div class="panel active" id="obj-${c.num}">
+          <div class="panel active" id="${objId}">
             <div class="obj-grid">
               <div class="obj-box" style="grid-column: 1 / -1;">
                 <div class="obj-box-label">Objetivo do critério</div>
@@ -297,7 +439,7 @@ function buildCards() {
               </div>
             </div>
           </div>
-          <div class="panel" id="ex-${c.num}">
+          <div class="panel" id="${exId}">
             <div class="ex-grid">
               <div class="ex-box fazer">
                 <div class="ex-label fazer">✅ O que fazer</div>
@@ -346,31 +488,17 @@ function filterCards(cat, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   if (cat === 'all') {
     btn.classList.add('active');
-    document.querySelectorAll('.card').forEach(card => { card.style.display = 'block'; });
+    document.querySelectorAll('#cards-container .card').forEach(card => { card.style.display = 'block'; });
   } else {
     btn.classList.add('active');
-    document.querySelectorAll('.card').forEach(card => {
+    document.querySelectorAll('#cards-container .card').forEach(card => {
       card.style.display = card.dataset.cat === cat ? 'block' : 'none';
     });
   }
 }
 
-buildCards();
-
-(function() {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.filter-btn.conduao').classList.add('active');
-  document.querySelectorAll('.card').forEach(card => {
-    card.style.display = card.dataset.cat === 'conduao' ? 'block' : 'none';
-  });
-  const first = document.querySelector('.card[data-cat="conduao"]');
-  if (first) {
-    const body = first.querySelector('.card-body');
-    first.classList.add('open');
-    body.style.maxHeight = '9999px';
-    setTimeout(() => { body.style.maxHeight = body.scrollHeight + 'px'; }, 50);
-  }
-})();
+// Initialize
+switchChannel('sincrono');
 </script>
 </body>
 </html>
