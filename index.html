@@ -1,1225 +1,394 @@
+formulario interativo_monitoria jun-26.html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contestação de Monitoria — Turbi</title>
-<!--
-  Ginto Normal — fonte comercial ABC Dinamo.
-  Substitua os caminhos abaixo pelos arquivos .woff2 reais ou pela URL do CDN da Turbi.
-  Pesos utilizados: Bold (700) e Black (900).
--->
-<style>
-  @font-face {
-    font-family: 'Ginto Normal';
-    src: url('fonts/GintoNormal-Bold.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Ginto Normal';
-    src: url('fonts/GintoNormal-Black.woff2') format('woff2');
-    font-weight: 900;
-    font-style: normal;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Ginto Normal';
-    src: url('fonts/GintoNormal-Regular.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'Ginto Normal';
-    src: url('fonts/GintoNormal-Medium.woff2') format('woff2');
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
-  }
-</style>
-<style>
-  :root {
-    --blue: #0D1473;
-    --blue-light: #1620A8;
-    --cyan: #41B6E6;
-    --dark: #06091C;
-    --gray: #6B7280;
-    --gray-light: #F9FAFB;
-    --green: #16A34A;
-    --green-bg: #F0FDF4;
-    --red: #DC2626;
-    --red-bg: #FEF2F2;
-    --yellow: #D97706;
-    --yellow-bg: #FFFBEB;
-    --border: #E5E7EB;
-  }
+@@ -73,7 +72,49 @@
+  .stat-n { font-size: 26px; font-weight: 800; color: var(--cyan); }
+  .stat-l { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; letter-spacing: 0.05em; text-transform: uppercase; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Ginto Normal', 'Segoe UI', system-ui, sans-serif;
-    background: #F1F5FF;
-    color: #1e1e2e;
-    min-height: 100vh;
-  }
-
-  header {
-    background: var(--dark);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.4);
-  }
-  .header-inner {
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; padding: 20px 32px 0; align-items: center; }
+  /* Channel tabs */
+  .channel-tabs {
     display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 32px;
-    border-bottom: 3px solid var(--cyan);
+    gap: 0;
+    padding: 20px 32px 0;
+    max-width: 900px;
+    margin: 0 auto;
   }
-  .logo-pin img { height: 28px; width: auto; object-fit: contain; }
-
-  .hero {
-    background: linear-gradient(135deg, #07094A 0%, var(--blue) 55%, #1620A8 100%);
-    padding: 40px 32px 36px;
-    color: white;
-    text-align: center;
-  }
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 20px;
-    padding: 5px 14px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--cyan);
-    margin-bottom: 16px;
-  }
-  .hero h1 { font-size: 26px; font-weight: 900; line-height: 1.25; margin-bottom: 8px; letter-spacing: -0.01em; }
-  .hero p { font-size: 13px; color: rgba(255,255,255,0.7); max-width: 520px; margin: 0 auto; line-height: 1.6; }
-
-  .form-wrap {
-    max-width: 720px;
-    margin: 32px auto 60px;
-    padding: 0 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .block-card {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(13,20,115,0.08);
-    overflow: hidden;
-    border: 1.5px solid transparent;
-  }
-  .block-card.active { border-color: rgba(13,20,115,0.2); }
-
-  .block-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 24px 14px;
-    border-bottom: 1px solid var(--border);
-  }
-  .block-num {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: var(--blue);
-    color: white;
-    font-size: 13px;
-    font-weight: 800;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .block-title { font-size: 14px; font-weight: 900; color: var(--blue); letter-spacing: -0.01em; }
-  .block-subtitle { font-size: 11px; color: var(--gray); margin-top: 1px; }
-
-  .block-body { padding: 22px 24px; display: flex; flex-direction: column; gap: 18px; }
-
-  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  @media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
-  .field-row.full { grid-template-columns: 1fr; }
-
-  .field { display: flex; flex-direction: column; gap: 6px; }
-  .field label {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--gray);
-  }
-  .field label .req { color: var(--red); margin-left: 2px; }
-
-  .field input,
-  .field select,
-  .field textarea {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    font-family: 'Ginto Normal', sans-serif;
-    font-size: 13px;
-    color: #1e1e2e;
-    background: var(--gray-light);
-    transition: border-color 0.2s, box-shadow 0.2s;
-    outline: none;
-  }
-  .field input:focus,
-  .field select:focus,
-  .field textarea:focus {
-    border-color: var(--blue);
-    background: white;
-    box-shadow: 0 0 0 3px rgba(13,20,115,0.10);
-  }
-  .field input::placeholder,
-  .field textarea::placeholder { color: #9CA3AF; }
-  .field textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
-  .field select { cursor: pointer; appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 36px;
-  }
-  .field select:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* Radio toggle */
-  .radio-group { display: flex; gap: 10px; }
-  .radio-option { flex: 1; }
-  .radio-option input[type="radio"] { display: none; }
-  .radio-option label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 10px 14px;
-    border: 2px solid var(--border);
-    border-radius: 10px;
+  .channel-tab {
+    padding: 10px 28px;
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
-    text-transform: none;
-    letter-spacing: 0;
-    color: var(--gray);
-    background: var(--gray-light);
-    user-select: none;
-  }
-  .radio-option.sim input:checked + label {
-    border-color: var(--green);
-    background: var(--green-bg);
-    color: var(--green);
-  }
-  .radio-option.nao input:checked + label {
-    border-color: var(--red);
-    background: var(--red-bg);
-    color: var(--red);
-  }
-  .radio-option label:hover { border-color: #9CA3AF; background: white; }
-
-  /* Hint */
-  .field-hint {
-    font-size: 11px;
-    color: var(--gray);
-    line-height: 1.5;
-    margin-top: -4px;
-  }
-
-  /* Critério dinâmico */
-  .criterio-item {
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 12px;
-    background: #FAFAFA;
-    position: relative;
-  }
-  .criterio-item-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-  .criterio-item-num {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--blue);
-    text-transform: uppercase;
-    letter-spacing: .06em;
-  }
-  .btn-remove-criterio {
-    background: none;
-    border: 1px solid #FECACA;
-    color: #B91C1C;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background .15s;
-    display: none; /* oculto quando só há 1 item */
-  }
-  .btn-remove-criterio:hover { background: #FEF2F2; }
-  .criterio-item .field-row { margin-bottom: 0; }
-
-  .btn-add-criterio {
-    background: none;
-    border: 2px dashed var(--cyan);
-    color: var(--blue);
-    font-size: 13px;
-    font-weight: 700;
-    padding: 9px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    width: 100%;
-    transition: background .15s, border-color .15s;
-    letter-spacing: .02em;
-  }
-  .btn-add-criterio:hover { background: #F0FAFF; border-color: var(--blue); }
-
-  /* Upload de evidência */
-  .upload-separator {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 10px 0;
-    color: var(--gray);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .05em;
-  }
-  .upload-separator::before,
-  .upload-separator::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-  .upload-area {
-    border: 2px dashed var(--border);
-    border-radius: 10px;
-    padding: 20px 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color .2s, background .2s;
-    position: relative;
-    background: #fafafa;
-  }
-  .upload-area:hover, .upload-area.dragover {
-    border-color: var(--cyan);
-    background: #f0faff;
-  }
-  .upload-area input[type="file"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-  }
-  .upload-area .upload-icon { font-size: 24px; margin-bottom: 6px; }
-  .upload-area .upload-label {
-    font-size: 13px;
-    color: var(--gray);
-    line-height: 1.5;
-  }
-  .upload-area .upload-label strong { color: var(--blue); }
-
-  .upload-status {
-    display: none;
-    align-items: center;
-    gap: 8px;
-    margin-top: 8px;
-    font-size: 13px;
-    padding: 8px 12px;
-    border-radius: 8px;
-  }
-  .upload-status.uploading {
-    display: flex;
-    background: #EFF6FF;
-    color: #1D4ED8;
-  }
-  .upload-status.success {
-    display: flex;
-    background: #F0FDF4;
-    color: #15803D;
-  }
-  .upload-status.error {
-    display: flex;
-    background: #FEF2F2;
-    color: #B91C1C;
-  }
-  .upload-spinner {
-    width: 14px; height: 14px;
-    border: 2px solid currentColor;
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
-    flex-shrink: 0;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .upload-preview {
-    display: none;
-    margin-top: 10px;
-    border-radius: 8px;
-    overflow: hidden;
-    max-height: 120px;
-    border: 1px solid var(--border);
-  }
-  .upload-preview img {
-    width: 100%;
-    max-height: 120px;
-    object-fit: cover;
-    display: block;
-  }
-
-  /* SLA badge */
-  .sla-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--yellow-bg);
-    border: 1px solid #FDE68A;
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 12px;
-    color: var(--yellow);
-    font-weight: 600;
-  }
-  .sla-icon { font-size: 18px; flex-shrink: 0; }
-
-  /* Submit area */
-  .submit-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    padding-top: 4px;
-  }
-  .btn-submit {
-    width: 100%;
-    padding: 14px 24px;
-    background: var(--blue);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-family: 'Ginto Normal', sans-serif;
-    font-size: 15px;
-    font-weight: 900;
-    letter-spacing: 0.01em;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    letter-spacing: 0.02em;
-  }
-  .btn-submit:hover { background: var(--blue-light); }
-  .btn-submit:active { transform: scale(0.99); }
-  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-  .submit-note { font-size: 11px; color: var(--gray); text-align: center; }
-
-  /* Success state */
-  .success-overlay {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    text-align: center;
-    padding: 48px 24px;
-  }
-  .success-overlay.show { display: flex; }
-  .success-icon {
-    width: 64px; height: 64px;
-    border-radius: 50%;
-    background: var(--green-bg);
-    border: 2px solid #BBF7D0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 30px;
-  }
-  .success-title { font-size: 18px; font-weight: 900; color: #1e1e2e; letter-spacing: -0.01em; }
-  .success-sub { font-size: 13px; color: var(--gray); max-width: 380px; line-height: 1.6; }
-  .success-sla {
-    background: var(--yellow-bg);
-    border: 1px solid #FDE68A;
-    border-radius: 10px;
-    padding: 10px 18px;
-    font-size: 12px;
-    color: var(--yellow);
-    font-weight: 600;
-  }
-  .btn-nova {
-    padding: 10px 24px;
-    background: transparent;
     border: 2px solid var(--blue);
-    border-radius: 10px;
+    border-bottom: none;
+    background: white;
     color: var(--blue);
-    font-family: 'Ginto Normal', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
+    border-radius: 10px 10px 0 0;
+    margin-right: 4px;
     transition: all 0.2s;
+    opacity: 0.5;
+    letter-spacing: 0.03em;
   }
-  .btn-nova:hover { background: var(--blue); color: white; }
+  .channel-tab.active {
+    background: var(--blue);
+    color: white;
+    opacity: 1;
+    box-shadow: 0 -2px 10px rgba(34,29,169,0.15);
+  }
+  .channel-tab:hover:not(.active) { opacity: 0.8; }
 
-  /* Loading state */
-  .field-loading {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    background: var(--gray-light);
-    font-size: 13px;
-    color: #9CA3AF;
+  .channel-bar {
+    padding: 0 32px;
+    max-width: 900px;
+    margin: 0 auto;
   }
-  .spinner {
-    width: 14px; height: 14px;
-    border: 2px solid #E5E7EB;
-    border-top-color: var(--blue);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    flex-shrink: 0;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Auto-filled */
-  select.auto-filled {
-    border-color: var(--cyan);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2341B6E6' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  .channel-divider {
+    height: 3px;
+    background: var(--blue);
+    border-radius: 0 0 2px 2px;
   }
 
-  /* Error state */
-  .field.error input,
-  .field.error select,
-  .field.error textarea {
-    border-color: var(--red);
-    background: #fff5f5;
-  }
-  .field-error-msg { font-size: 11px; color: var(--red); font-weight: 600; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; padding: 20px 32px 0; align-items: center; max-width: 900px; margin: 0 auto; }
+  .filter-label { font-size: 12px; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
+  .filter-btn { padding: 6px 14px; border-radius: 20px; border: 2px solid transparent; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; letter-spacing: 0.04em; text-transform: uppercase; }
+  .filter-btn.all { background: var(--blue); color: white; border-color: var(--blue); }
+@@ -84,7 +125,7 @@
+  .filter-btn:not(.active) { opacity: 0.45; }
+  .filter-btn.active { opacity: 1; }
 
-  footer { text-align: center; padding: 20px; font-size: 11px; color: #9CA3AF; }
-</style>
-</head>
-<body>
+  main { padding: 24px 32px 60px; max-width: 900px; margin: 0 auto; }
+  main { padding: 16px 32px 60px; max-width: 900px; margin: 0 auto; }
+
+  .card { background: white; border-radius: 14px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(34,29,169,0.07); overflow: hidden; transition: box-shadow 0.2s; border: 1.5px solid transparent; }
+  .card:hover { box-shadow: 0 4px 20px rgba(34,29,169,0.13); }
+@@ -159,102 +200,203 @@
 
 <header>
   <div class="header-inner">
-    <div class="logo-pin">
-      <img src="iconTurbiPin.svg" alt="Turbi">
-    </div>
+    <div class="logo-pin"><img src="data:image/png;base64,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" alt="Turbi"></div>
+    <div class="logo-pin"><img src="data:image/png;base64,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" alt="Turbi"></div>
   </div>
 </header>
 
 <div class="hero">
-  <div class="hero-badge">⚖️ Fluxo de Reanálise</div>
-  <h1>Reanálise de Monitoria<br>de Qualidade</h1>
-  <p>Preencha os campos abaixo para registrar uma contestação. O time de qualidade irá reanalisar e responder em até 72h.</p>
-</div>
-
-<div class="form-wrap" id="form-wrap">
-
-  <!-- FORM -->
-  <form id="contestacao-form" novalidate>
-
-    <!-- BLOCO 1: Identificação do chamado -->
-    <div class="block-card active">
-      <div class="block-header">
-        <div class="block-num">1</div>
-        <div>
-          <div class="block-title">Identificação do Chamado</div>
-          <div class="block-subtitle">Dados do atendimento que está sendo contestado</div>
-        </div>
-      </div>
-      <div class="block-body">
-        <div class="field-row full">
-          <div class="field" id="field-chamado-id">
-            <label>ID / Nº do Chamado <span class="req">*</span></label>
-            <input type="text" id="chamado-id" placeholder="Ex: CHM-20240615-001" autocomplete="off">
-          </div>
-        </div>
-        <div class="field-row full">
-          <div class="field" id="field-analista">
-            <label>Analista Avaliado <span class="req">*</span></label>
-            <div class="field-loading" id="analista-loading">
-              <div class="spinner"></div> Carregando analistas...
-            </div>
-            <select id="analista" onchange="onAnalistaChange()" disabled style="display:none;">
-              <option value="">Selecione o analista</option>
-            </select>
-            <div class="field-hint" id="analista-hint" style="display:none;">Supervisor será preenchido automaticamente.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- BLOCO 2: Identificação do Contestante -->
-    <div class="block-card active">
-      <div class="block-header">
-        <div class="block-num">2</div>
-        <div>
-          <div class="block-title">Identificação do Contestante</div>
-          <div class="block-subtitle">Supervisor ou coordenador responsável pela contestação</div>
-        </div>
-      </div>
-      <div class="block-body">
-        <div class="field-row full">
-          <div class="field" id="field-supervisor">
-            <label>Nome do Supervisor / Coordenador <span class="req">*</span></label>
-            <div class="field-loading" id="supervisor-loading">
-              <div class="spinner"></div> Carregando supervisores...
-            </div>
-            <select id="supervisor" disabled style="display:none;">
-              <option value="">Selecione o supervisor</option>
-            </select>
-            <div class="field-hint" id="supervisor-hint" style="display:none;">Preenchido automaticamente. Altere se necessário.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- BLOCO 3: Detalhes da Reanálise -->
-    <div class="block-card active">
-      <div class="block-header">
-        <div class="block-num">3</div>
-        <div>
-          <div class="block-title">Detalhes da Reanálise</div>
-          <div class="block-subtitle">Critério(s), avaliação original, sugestão e justificativa</div>
-        </div>
-      </div>
-      <div class="block-body">
-
-        <!-- Container de critérios (dinâmico) -->
-        <div id="criterios-container"></div>
-
-        <!-- Botão adicionar critério -->
-        <div style="margin: 4px 0 16px;">
-          <button type="button" class="btn-add-criterio" onclick="addCriterio()">
-            ＋ Adicionar outro critério
-          </button>
-        </div>
-
-        <div class="field-row full">
-          <div class="field" id="field-justificativa">
-            <label>Justificativa da Contestação <span class="req">*</span></label>
-            <textarea id="justificativa" placeholder="Descreva os motivos da contestação, incluindo o que foi observado no chamado e por que a avaliação original está incorreta..."></textarea>
-          </div>
-        </div>
-
-        <div class="field-row full">
-          <div class="field">
-            <label>Link de Evidência <span style="color:#9CA3AF;font-weight:400;">(opcional)</span></label>
-            <input type="url" id="evidencia" placeholder="Ex: https://link-da-gravacao.com">
-            <div class="upload-separator">ou anexe um print</div>
-            <div class="upload-area" id="uploadArea">
-              <input type="file" id="uploadInput" accept="image/*" onchange="handleImageUpload(this)">
-              <div class="upload-icon">🖼️</div>
-              <div class="upload-label">
-                <strong>Clique para selecionar</strong> ou arraste uma imagem aqui<br>
-                PNG, JPG, GIF até 32 MB
-              </div>
-            </div>
-            <div class="upload-preview" id="uploadPreview">
-              <img id="uploadPreviewImg" src="" alt="Preview">
-            </div>
-            <div class="upload-status" id="uploadStatus">
-              <span id="uploadStatusIcon"></span>
-              <span id="uploadStatusText"></span>
-            </div>
-            <div class="field-hint">Gravação do chamado, print de tela ou qualquer evidência que suporte a reanálise.</div>
-          </div>
-        </div>
-
-        <div class="sla-info">
-          <span class="sla-icon">⏱️</span>
-          <span>O time de qualidade irá reanalisar e retornar com a decisão em até <strong>72 horas úteis</strong> a partir do registro.</span>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- SUBMIT -->
-    <div class="block-card active">
-      <div class="block-body">
-        <div class="submit-area">
-          <button type="submit" class="btn-submit" id="btn-submit">
-            Registrar Reanálise
-          </button>
-          <p class="submit-note">Ao enviar, a contestação será registrada com timestamp e encaminhada ao time de qualidade.</p>
-        </div>
-      </div>
-    </div>
-
-  </form>
-
-  <!-- SUCCESS -->
-  <div class="block-card active" id="success-card" style="display:none;">
-    <div class="success-overlay show">
-      <div class="success-icon">✅</div>
-      <div class="success-title">Contestação Registrada!</div>
-      <div class="success-sub">
-        Sua contestação foi enviada com sucesso e já está disponível no painel de acompanhamento. O time de qualidade irá reanalisar o chamado.
-      </div>
-      <div class="success-sla">⏱️ Prazo de retorno: até 72 horas úteis</div>
-      <div id="success-meta" style="font-size:12px;color:#6B7280;text-align:center;line-height:1.8;"></div>
-      <button class="btn-nova" onclick="novaCont()">+ Nova Contestação</button>
-    </div>
+  <h1>Formulário de Monitoria<br>de Qualidade</h1>
+  <p>Clique em cada critério para ver a pergunta de avaliação, objetivo e exemplos práticos de o que fazer e o que não fazer.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n">6</div><div class="stat-l">Critérios</div></div>
+    <div class="stat"><div class="stat-n">4</div><div class="stat-l">Blocos</div></div>
+  <div class="hero-stats" id="hero-stats">
+    <div class="stat"><div class="stat-n" id="stat-criterios">6</div><div class="stat-l">Critérios</div></div>
+    <div class="stat"><div class="stat-n" id="stat-blocos">4</div><div class="stat-l">Blocos</div></div>
+    <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Pontuação máx.</div></div>
   </div>
-
 </div>
 
-<footer>turbi · Formulário de Contestação de Monitoria · Uso interno</footer>
+<div class="filters">
+<!-- Channel tabs -->
+<div class="channel-tabs">
+  <button class="channel-tab active" id="tab-sincrono" onclick="switchChannel('sincrono')">📞 Síncrono</button>
+  <button class="channel-tab" id="tab-assincrono" onclick="switchChannel('assincrono')">💬 Assíncrono</button>
+</div>
+<div class="channel-bar"><div class="channel-divider"></div></div>
+
+<div class="filters" id="filters-container">
+  <span class="filter-label">Filtrar:</span>
+  <button class="filter-btn all active" onclick="filterCards('all', this)">Todos</button>
+  <button class="filter-btn all" onclick="filterCards('all', this)">Todos</button>
+  <button class="filter-btn conduao active" onclick="filterCards('conduao', this)">Condução</button>
+  <button class="filter-btn processos active" onclick="filterCards('processos', this)">Processos</button>
+  <button class="filter-btn comportamento active" onclick="filterCards('comportamento', this)">Comportamento</button>
+  <button class="filter-btn compliance active" onclick="filterCards('compliance', this)">Compliance</button>
+  <button id="btn-processos" class="filter-btn processos" onclick="filterCards('processos', this)">Processos</button>
+  <button class="filter-btn comportamento" onclick="filterCards('comportamento', this)">Comportamento</button>
+  <button class="filter-btn compliance" onclick="filterCards('compliance', this)">Compliance</button>
+</div>
+
+<main id="cards-container"></main>
+
+<footer>turbi · Formulário de Monitoria de Qualidade · Junho 2026 · Uso interno</footer>
 
 <script>
-// ─── CONFIGURAÇÃO ───────────────────────────────────────────────────────────
-const SHEET_ID = '1jEXJ386zgETmB75azKSTaAkD8nTumAqguobHmRFw804';
-
-// Cole aqui a URL gerada após publicar o Apps Script como Web App:
-const APPS_SCRIPT_URL = 'https://script.google.com/a/macros/turbi.com.br/s/AKfycbxgJ5Rl0g2qpKIB1uSo5zFt7YKHyseOxfWjx7Z5vz4ph0B7S9ruH4JSz59ai8MX5hI/exec';
-
-// ─── IMGBB API KEY ──────────────────────────────────────────────────────────
-// Obtenha uma chave gratuita em: https://api.imgbb.com/
-// Substitua a string abaixo pela sua chave.
-const IMGBB_API_KEY = 'SUA_CHAVE_AQUI';
-
-// ─── FALLBACK (dados sincronizados em 15/06/2026) ──────────────────────────
-// Fallback filtrado: apenas analistas com Ilha preenchida na planilha
-const FALLBACK_ANALISTAS = [
-  { nome: "Aurora Souza",         email: "aurora.souza@turbi.com.br",         supervisor: "Dayane Oliveira",   ilha: "Suporte" },
-  { nome: "Ayanni Rodrigues",     email: "ayanni.rodrigues@turbi.com.br",     supervisor: "Dayane Oliveira",   ilha: "Emergência" },
-  { nome: "Bruna Cornelio",       email: "bruna.cornelio@turbi.com.br",       supervisor: "Deborah Carvalho",  ilha: "Pleno" },
-  { nome: "Caio Aurelio",         email: "caio.aurelio@turbi.com.br",         supervisor: "Lucineia Bianchi",  ilha: "Suporte" },
-  { nome: "Carlos Conceição",     email: "carlos.conceicao@turbi.com.br",     supervisor: "Dayane Oliveira",   ilha: "Suporte" },
-  { nome: "Carlos Oliveira",      email: "carlos.oliveira@turbi.com.br",      supervisor: "Barbara Toledo",    ilha: "Pleno" },
-  { nome: "Carolina Slepicka",    email: "carolina.slepicka@turbi.com.br",    supervisor: "Deborah Carvalho",  ilha: "Pleno" },
-  { nome: "Edinaldo Bento",       email: "edinaldo.bento@turbi.com.br",       supervisor: "Renata Brito",      ilha: "Pleno" },
-  { nome: "Elisabete Oliva",      email: "elisabete.oliva@turbi.com.br",      supervisor: "Lucineia Bianchi",  ilha: "Emergência" },
-  { nome: "Erica Conceicao",      email: "erica.conceicao@turbi.com.br",      supervisor: "Barbara Toledo",    ilha: "Financeiro" },
-  { nome: "Erika Carvalho",       email: "erika.carvalho@turbi.com.br",       supervisor: "Lucineia Bianchi",  ilha: "Suporte" },
-  { nome: "Estelita Santos",      email: "estelita.santos@turbi.com.br",      supervisor: "Dayane Oliveira",   ilha: "Suporte" },
-  { nome: "Evandro Aparecido",    email: "evandro.aparecido@turbi.com.br",    supervisor: "Renata Brito",      ilha: "Suporte" },
-  { nome: "Everton Oliveira",     email: "everton.oliveira@turbi.com.br",     supervisor: "Lucineia Bianchi",  ilha: "Emergência" },
-  { nome: "Fabricio Pimenta",     email: "fabricio.pimenta@turbi.com.br",     supervisor: "Lucineia Bianchi",  ilha: "Suporte" },
-  { nome: "Gabriel Carvalho",     email: "gabriel.carvalho@turbi.com.br",     supervisor: "Dayane Oliveira",   ilha: "Emergência" },
-  { nome: "Gabriela Alves",       email: "gabriela.alves@turbi.com.br",       supervisor: "Dayane Oliveira",   ilha: "Suporte" },
-  { nome: "Gabriela Oliveira",    email: "gabriela.oliveira@turbi.com.br",    supervisor: "Renata Brito",      ilha: "Suporte" },
-  { nome: "Giulia Campos",        email: "giulia.campos@turbi.com.br",        supervisor: "Dayane Oliveira",   ilha: "Emergência" },
-  { nome: "Haylla Rodrigues",     email: "haylla.rodrigues@turbi.com.br",     supervisor: "Renata Brito",      ilha: "Suporte" },
-  { nome: "Hugo Cruz",            email: "hugo.cruz@turbi.com.br",            supervisor: "Barbara Toledo",    ilha: "Financeiro" },
-  { nome: "Janete Bassi",         email: "janete.bassi@turbi.com.br",         supervisor: "Dayane Oliveira",   ilha: "Emergência" },
-  { nome: "Jario Carvalho",       email: "jario.carvalho@turbi.com.br",       supervisor: "Renata Brito",      ilha: "Emergência" },
-  { nome: "João Rialto",          email: "joao.rialto@turbi.com.br",          supervisor: "Lucineia Bianchi",  ilha: "Suporte" },
-  { nome: "Jose Carlos",          email: "jose.carlos@turbi.com.br",          supervisor: "Dayane Oliveira",   ilha: "Suporte" },
-  { nome: "Junior Almeida",       email: "junior.almeida@turbi.com.br",       supervisor: "Dayane Oliveira",   ilha: "Emergência" },
-  { nome: "Karina Lico",          email: "karina.lico@turbi.com.br",          supervisor: "Dayane Oliveira",   ilha: "Suporte" },
-  { nome: "Larissa Carvalho",     email: "larissa.carvalho@turbi.com.br",     supervisor: "Barbara Toledo",    ilha: "Pleno" },
-  { nome: "Leticia França",       email: "leticia.franca@turbi.com.br",       supervisor: "Lucineia Bianchi",  ilha: "Suporte" },
-  { nome: "Leticia Marques",      email: "leticia.marques@turbi.com.br",      supervisor: "Barbara Toledo",    ilha: "E-mail" },
-  { nome: "Luana Capaccioli",     email: "luana.capaccioli@turbi.com.br",     supervisor: "Renata Brito",      ilha: "Suporte" },
-  { nome: "Luanna Albertini",     email: "luanna.albertini@turbi.com.br",     supervisor: "Dayane Oliveira",   ilha: "Emergência" },
-  { nome: "Lucas Giuseppe",       email: "lucas.giuseppe@turbi.com.br",       supervisor: "Renata Brito",      ilha: "Emergência" },
-  { nome: "Lucas Steves",         email: "lucas.steves@turbi.com.br",         supervisor: "Dayane Oliveira",   ilha: "Suporte" },
-  { nome: "Luccas Ramos",         email: "luccas.ramos@turbi.com.br",         supervisor: "Dayane Oliveira",   ilha: "Suporte" },
-  { nome: "Maria Isabel",         email: "maria.isabel@turbi.com.br",         supervisor: "Barbara Toledo",    ilha: "Financeiro" },
-  { nome: "Matheus Mendes",       email: "matheus.mendes@turbi.com.br",       supervisor: "Dayane Oliveira",   ilha: "Emergência" },
-  { nome: "Melissa Sousa",        email: "melissa.sousa@turbi.com.br",        supervisor: "Deborah Carvalho",  ilha: "Pleno" },
-  { nome: "Monique Santos",       email: "monique.santos@turbi.com.br",       supervisor: "Renata Brito",      ilha: "Emergência" },
-  { nome: "Monyse Rosa",          email: "monyse.rosa@turbi.com.br",          supervisor: "Lucineia Bianchi",  ilha: "Suporte" },
-  { nome: "Nancy Tavares",        email: "nancy.tavares@turbi.com.br",        supervisor: "Deborah Carvalho",  ilha: "RA" },
-  { nome: "Nathália Montagneiro", email: "nathalia.montagneiro@turbi.com.br", supervisor: "Lucineia Bianchi",  ilha: "Suporte" },
-  { nome: "Nicole Soares",        email: "nicole.soares@turbi.com.br",        supervisor: "Dayane Oliveira",   ilha: "Emergência" },
-  { nome: "Pamela Oliveira",      email: "pamela.oliveira@turbi.com.br",      supervisor: "Lucineia Bianchi",  ilha: "Suporte" },
-  { nome: "Roberson Pereira",     email: "roberson.pereira@turbi.com.br",     supervisor: "Barbara Toledo",    ilha: "Financeiro" },
-  { nome: "Rodrigo Rocha",        email: "rodrigo.rocha@turbi.com.br",        supervisor: "Lucineia Bianchi",  ilha: "Suporte" },
-  { nome: "Suelen Silva",         email: "suelen.silva@turbi.com.br",         supervisor: "Dayane Oliveira",   ilha: "Emergência" },
-  { nome: "Suellen Souza",        email: "suellen.souza@turbi.com.br",        supervisor: "Deborah Carvalho",  ilha: "Pleno" },
-  { nome: "Thago Souza",          email: "thiago.souza@turbi.com.br",         supervisor: "Lucineia Bianchi",  ilha: "Suporte" },
-  { nome: "Thais Nunes",          email: "thais.nunes@turbi.com.br",          supervisor: "Renata Brito",      ilha: "Suporte" },
-  { nome: "Veronica Novaes",      email: "veronica.novaes@turbi.com.br",      supervisor: "Renata Brito",      ilha: "Suporte" },
-  { nome: "Victor Souza",         email: "victor.souza@turbi.com.br",         supervisor: "Renata Brito",      ilha: "Emergência" },
-  { nome: "Vinícius Reis",        email: "vinicius.reis@turbi.com.br",        supervisor: "Renata Brito",      ilha: "Suporte" },
-  { nome: "Vitor Santos",         email: "vitor.santos@turbi.com.br",         supervisor: "Dayane Oliveira",   ilha: "Suporte" },
-  { nome: "Vitoria Santos",       email: "vitoria.santos@turbi.com.br",       supervisor: "Barbara Toledo",    ilha: "Pleno" },
-];
-
-const FALLBACK_SUPERVISORES = [
-  "Alessandra Gregatti",
-  "Alexandre Checozzi",
-  "Barbara Toledo",
-  "Dayane Oliveira",
-  "Deborah Carvalho",
-  "Lucineia Bianchi",
-  "Renata Brito",
-];
-
-// ─── ESTADO GLOBAL ──────────────────────────────────────────────────────────
-let analistaMap = {}; // email → { nome, supervisor }
-
-// ─── CRITÉRIOS POR CANAL ────────────────────────────────────────────────────
-const criteriosPorCanal = {
+const criteria = [
+  {
+    num: 1, bloco: "CONDUÇÃO", cat: "conduao",
+    pergunta: "A comunicação do agente foi clara e o cliente compreendeu a mensagem transmitida?",
+    objetivo: "Garantir que o cliente saia do contato com a informação corretamente assimilada, sem necessidade de recontato para esclarecimento da mesma dúvida. Mensagens ambíguas, técnicas ou incompletas impactam diretamente a satisfação e o volume de chamados.",
+    valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
+    definicao: "O cliente deve sair sem dúvidas e com uma solução direta. O agente usa palavras simples, organiza a explicação de forma lógica e confirma o entendimento antes de finalizar. Evitar: respostas monossilábicas ('ok', 'certo'), repetição da mesma justificativa quando o cliente não entendeu.",
+    fazer: `Cliente pergunta: 'Então meu carro vai ser trocado?'\n\nAgente: 'Sim! Vou abrir o chamado agora mesmo para a troca. Você receberá uma notificação no app em até 2 horas com o local de retirada do novo veículo. Tem mais alguma dúvida?'\n\n→ Cliente responde: 'Perfeito, obrigado!' ✓\nInformação completa, confirmação clara.`,
+    nao_fazer: `Cliente: 'Não entendi como funciona o desbloqueio.'\n\nAgente: 'O desbloqueio é feito pelo app, como já mencionei na mensagem anterior.'\n\n→ Repete a mesma resposta sem adaptar a explicação. ✗\n\nOutro exemplo ✗: Agente usa termos técnicos internos: 'Sua reserva está com status CKI pendente no sistema.'`
+  },
+  {
+    num: 2, bloco: "CONDUÇÃO", cat: "conduao",
+    pergunta: "O agente respondeu a todas as perguntas e solicitações feitas pelo cliente?",
+    objetivo: "Assegurar que nenhum questionamento — explícito ou implícito — fique sem resposta ao longo do atendimento. Perguntas ignoradas geram recontatos, insatisfação e baixa percepção de resolutividade (First Contact Resolution).",
+    valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
+    definicao: "O agente lê toda a mensagem do cliente antes de responder e garante que cada dúvida seja endereçada. Quando há encaminhamento (prazo, chamado aberto), isso também conta como resposta válida. Evitar: inativar o chat com perguntas pendentes, enviar prints sem contexto.",
+    fazer: `Cliente: 'Quanto tempo leva a troca? E minha caução vai ser devolvida?'\n\nAgente: 'A troca de veículo leva em média 24h úteis após a aprovação do chamado. Sobre a caução: ela é liberada em até 7 dias úteis após a devolução do carro atual. Posso ajudar com mais alguma coisa?'\n\n→ Ambas as perguntas foram respondidas de forma completa. ✓`,
+    nao_fazer: `Cliente: 'Quando meu carro fica pronto? E como faço para pegar o carro novo?'\n\nAgente: 'Seu carro fica pronto em 2 dias.'\n\n→ A segunda pergunta ('como pego o carro novo?') foi ignorada. ✗\n\nOutro exemplo ✗: Agente envia print de tela sem explicar o que o cliente deve observar.`
+  },
+  {
+    num: 3, bloco: "PROCESSOS", cat: "processos",
+    pergunta: "O agente orientou o cliente a utilizar o autoatendimento quando o processo estava disponível no app?",
+    objetivo: "Fomentar a autonomia digital do cliente, reduzindo dependência do suporte humano para processos que podem ser resolvidos via app. Impacta diretamente a taxa de contato e a eficiência operacional.",
+    valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
+    definicao: "Para processos disponíveis no app, o agente orienta o passo a passo antes de resolver. Se o cliente já sabe como fazer ou confirma que vai realizar, avaliar como N/A. O documento de processos de autoatendimento deve ser consultado e atualizado sempre que novos processos forem lançados.",
+    fazer: `Cliente: 'Preciso atualizar minha forma de pagamento.'\n\nAgente: 'Você pode fazer isso direto no app! Vá em Perfil > Pagamentos > Adicionar cartão. É rápido e fica disponível para sua próxima reserva. Quer que eu te ajude com mais alguma coisa?'\n\n→ Orientou o autoatendimento antes de oferecer qualquer outra solução. ✓`,
+    nao_fazer: `Cliente: 'Quero cancelar minha reserva.'\n\nAgente: 'Ok, vou cancelar para você.' [cancela pelo sistema]\n\n→ Não orientou que o cliente poderia cancelar diretamente pelo app. ✗\n\nOutro exemplo ✗: Escalou para outro canal sem antes informar que a solicitação poderia ser feita pelo app.`
+  },
+  {
+    num: 4, bloco: "COMPORTAMENTO", cat: "comportamento",
+    pergunta: "O agente encerrou o atendimento de forma abrupta, sem despedida ou com perguntas do cliente sem resposta?",
+    objetivo: "Garantir que todo atendimento seja encerrado com qualidade — com uma despedida adequada e apenas após confirmar que o cliente não tem mais dúvidas. Encerramentos abruptos geram insatisfação imediata e impactam CSAT, NPS e a imagem da marca.",
+    valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−20%",
+    definicao: "Todo atendimento deve ser encerrado com: (1) confirmação de que a demanda foi resolvida, (2) verificação se o cliente tem mais dúvidas, (3) frase de despedida. Não confundir com: inatividade do sistema, transferência para outro agente, ou retorno do cliente após pausa.",
+    fazer: `Agente: 'Seu chamado foi aberto com número #4521. Você receberá uma atualização em até 24h. Posso ajudar com mais alguma coisa?'\nCliente: 'Não, obrigado.'\nAgente: 'Ótimo! Fico à disposição. Tenha um ótimo dia! 😊' ✓`,
+    nao_fazer: `Agente: 'Seu chamado foi registrado.' [encerra o chat]\n\n→ Nenhuma verificação se o cliente tem dúvidas, sem despedida. ✗\n\nAtenção — NÃO pontuar como SIM:\n• Última mensagem: 'Este atendimento foi encerrado automaticamente por inatividade.' [mensagem do sistema]\n• Agente retorna após pausa: 'Olá! Posso te ajudar?' [reinício = novo atendimento]`
+  },
+  {
+    num: 5, bloco: "COMPORTAMENTO", cat: "comportamento",
+    pergunta: "O agente demonstrou descaso, frieza, deboche ou sarcasmo durante o atendimento?",
+    objetivo: "Garantir que o tom do agente seja empático, respeitoso e profissional em todas as interações. Comportamentos de descaso ou deboche comprometem a experiência do cliente e a imagem da Turbi, podendo gerar escaladas, reclamações públicas e cancelamentos.",
+    valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−20%",
+    definicao: "O agente deve demonstrar empatia e senso de urgência compatível com a situação do cliente — especialmente em casos de reclamações ou problemas operacionais graves. Respostas curtas e mecânicas, sem acolhimento, podem ser interpretadas como frieza mesmo sem intenção.",
+    fazer: `Cliente: 'Estou há 3 dias tentando resolver isso e ninguém me ajuda!'\n\nAgente: 'Entendo sua frustração e me desculpe pela demora. Vou priorizar seu caso agora mesmo e garantir que você tenha uma resposta até hoje. Pode me confirmar o número do chamado?'\n\n→ Tom empático, reconhece o problema, oferece ação concreta. ✓`,
+    nao_fazer: `Cliente: 'Isso é um absurdo, nunca funciona nada!'\n\nAgente: 'Já expliquei como funciona. Se tiver mais dúvidas, é só chamar.'\n\n→ Tom frio e dismissivo, sem acolhimento da insatisfação. ✗\n\nOutro exemplo ✗: Agente responde com 'Ok.' ou 'Entendido.' para reclamações graves, sem demonstrar empatia.`
+  },
+  {
+    num: 6, bloco: "COMPLIANCE", cat: "compliance",
+    pergunta: "O agente compartilhou ou confirmou dados pessoais sensíveis sem seguir o protocolo de verificação de identidade?",
+    objetivo: "Proteger os dados dos clientes e a Turbi de violações de privacidade e LGPD. O compartilhamento indevido de dados sensíveis gera riscos jurídicos, perda de confiança e danos à reputação.",
+    valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−100%",
+    definicao: "O agente deve verificar a identidade do cliente antes de confirmar ou compartilhar qualquer dado sensível (CPF, dados bancários, endereço, dados do veículo). Nunca compartilhar dados de terceiros. Em caso de dúvida, escalar para supervisão.",
+    fazer: `Correto (NÃO houve violação) ✓:\nAgente: 'Para confirmar sua identidade, pode me informar o CPF cadastrado e o e-mail da conta?'\nCliente: [fornece os dados]\nAgente: 'Confirmado! Agora posso te ajudar com os detalhes da sua reserva.'\n\n→ Verificação de identidade realizada antes de compartilhar informações. ✓`,
+    nao_fazer: `Cliente: 'Qual é o CPF do motorista que estava no carro antes de mim?'\n\nAgente: 'O CPF dele é 123.456.789-00.'\n\n→ Compartilhou dados de terceiro sem nenhuma justificativa ou protocolo. ✗ Violação grave de LGPD.\n\nOutro exemplo ✗: Agente confirma dados bancários do cliente sem verificar identidade previamente.`
+const criteriaAll = {
   sincrono: [
-    { value: "CONDUCAO_1",    label: "Condução 1 — Clareza na comunicação" },
-    { value: "CONDUCAO_2",    label: "Condução 2 — Completude nas respostas" },
-    { value: "PROCESSOS_1",   label: "Processos — Orientação ao autoatendimento" },
-    { value: "COMPORTAMENTO_1", label: "Comportamento 1 — Encerramento adequado" },
-    { value: "COMPORTAMENTO_2", label: "Comportamento 2 — Tom e empatia" },
-    { value: "COMPLIANCE_1",  label: "Compliance — Verificação de identidade/dados" },
+    {
+      num: 1, bloco: "CONDUÇÃO", cat: "conduao",
+      pergunta: "A comunicação do agente foi clara e o cliente compreendeu a mensagem transmitida?",
+      objetivo: "Garantir que o cliente saia do contato com a informação corretamente assimilada, sem necessidade de recontato para esclarecimento da mesma dúvida. Mensagens ambíguas, técnicas ou incompletas impactam diretamente a satisfação e o volume de chamados.",
+      valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
+      definicao: "O cliente deve sair sem dúvidas e com uma solução direta. O agente usa palavras simples, organiza a explicação de forma lógica e confirma o entendimento antes de finalizar. Evitar: respostas monossilábicas ('ok', 'certo'), repetição da mesma justificativa quando o cliente não entendeu.",
+      fazer: `Cliente pergunta: 'Então meu carro vai ser trocado?'\n\nAgente: 'Sim! Vou abrir o chamado agora mesmo para a troca. Você receberá uma notificação no app em até 2 horas com o local de retirada do novo veículo. Tem mais alguma dúvida?'\n\n→ Cliente responde: 'Perfeito, obrigado!' ✓\nInformação completa, confirmação clara.`,
+      nao_fazer: `Cliente: 'Não entendi como funciona o desbloqueio.'\n\nAgente: 'O desbloqueio é feito pelo app, como já mencionei na mensagem anterior.'\n\n→ Repete a mesma resposta sem adaptar a explicação. ✗\n\nOutro exemplo ✗: Agente usa termos técnicos internos: 'Sua reserva está com status CKI pendente no sistema.'`
+    },
+    {
+      num: 2, bloco: "CONDUÇÃO", cat: "conduao",
+      pergunta: "O agente respondeu a todas as perguntas e solicitações feitas pelo cliente?",
+      objetivo: "Assegurar que nenhum questionamento — explícito ou implícito — fique sem resposta ao longo do atendimento. Perguntas ignoradas geram recontatos, insatisfação e baixa percepção de resolutividade (First Contact Resolution).",
+      valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
+      definicao: "O agente lê toda a mensagem do cliente antes de responder e garante que cada dúvida seja endereçada. Quando há encaminhamento (prazo, chamado aberto), isso também conta como resposta válida. Evitar: inativar o chat com perguntas pendentes, enviar prints sem contexto.",
+      fazer: `Cliente: 'Quanto tempo leva a troca? E minha caução vai ser devolvida?'\n\nAgente: 'A troca de veículo leva em média 24h úteis após a aprovação do chamado. Sobre a caução: ela é liberada em até 7 dias úteis após a devolução do carro atual. Posso ajudar com mais alguma coisa?'\n\n→ Ambas as perguntas foram respondidas de forma completa. ✓`,
+      nao_fazer: `Cliente: 'Quando meu carro fica pronto? E como faço para pegar o carro novo?'\n\nAgente: 'Seu carro fica pronto em 2 dias.'\n\n→ A segunda pergunta ('como pego o carro novo?') foi ignorada. ✗\n\nOutro exemplo ✗: Agente envia print de tela sem explicar o que o cliente deve observar.`
+    },
+    {
+      num: 3, bloco: "PROCESSOS", cat: "processos",
+      pergunta: "O agente orientou o cliente a utilizar o autoatendimento quando o processo estava disponível no app?",
+      objetivo: "Fomentar a autonomia digital do cliente, reduzindo dependência do suporte humano para processos que podem ser resolvidos via app. Impacta diretamente a taxa de contato e a eficiência operacional.",
+      valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
+      definicao: "Para processos disponíveis no app, o agente orienta o passo a passo antes de resolver. Se o cliente já sabe como fazer ou confirma que vai realizar, avaliar como N/A. O documento de processos de autoatendimento deve ser consultado e atualizado sempre que novos processos forem lançados.",
+      fazer: `Cliente: 'Preciso atualizar minha forma de pagamento.'\n\nAgente: 'Você pode fazer isso direto no app! Vá em Perfil > Pagamentos > Adicionar cartão. É rápido e fica disponível para sua próxima reserva. Quer que eu te ajude com mais alguma coisa?'\n\n→ Orientou o autoatendimento antes de oferecer qualquer outra solução. ✓`,
+      nao_fazer: `Cliente: 'Quero cancelar minha reserva.'\n\nAgente: 'Ok, vou cancelar para você.' [cancela pelo sistema]\n\n→ Não orientou que o cliente poderia cancelar diretamente pelo app. ✗\n\nOutro exemplo ✗: Escalou para outro canal sem antes informar que a solicitação poderia ser feita pelo app.`
+    },
+    {
+      num: 4, bloco: "COMPORTAMENTO", cat: "comportamento",
+      pergunta: "O agente encerrou o atendimento de forma abrupta, sem despedida ou com perguntas do cliente sem resposta?",
+      objetivo: "Garantir que todo atendimento seja encerrado com qualidade — com uma despedida adequada e apenas após confirmar que o cliente não tem mais dúvidas. Encerramentos abruptos geram insatisfação imediata e impactam CSAT, NPS e a imagem da marca.",
+      valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−20%",
+      definicao: "Todo atendimento deve ser encerrado com: (1) confirmação de que a demanda foi resolvida, (2) verificação se o cliente tem mais dúvidas, (3) frase de despedida. Não confundir com: inatividade do sistema, transferência para outro agente, ou retorno do cliente após pausa.",
+      fazer: `Agente: 'Seu chamado foi aberto com número #4521. Você receberá uma atualização em até 24h. Posso ajudar com mais alguma coisa?'\nCliente: 'Não, obrigado.'\nAgente: 'Ótimo! Fico à disposição. Tenha um ótimo dia! 😊' ✓`,
+      nao_fazer: `Agente: 'Seu chamado foi registrado.' [encerra o chat]\n\n→ Nenhuma verificação se o cliente tem dúvidas, sem despedida. ✗\n\nAtenção — NÃO pontuar como SIM:\n• Última mensagem: 'Este atendimento foi encerrado automaticamente por inatividade.' [mensagem do sistema]\n• Agente retorna após pausa: 'Olá! Posso te ajudar?' [reinício = novo atendimento]`
+    },
+    {
+      num: 5, bloco: "COMPORTAMENTO", cat: "comportamento",
+      pergunta: "O agente demonstrou descaso, frieza, deboche ou sarcasmo durante o atendimento?",
+      objetivo: "Garantir que o tom do agente seja empático, respeitoso e profissional em todas as interações. Comportamentos de descaso ou deboche comprometem a experiência do cliente e a imagem da Turbi, podendo gerar escaladas, reclamações públicas e cancelamentos.",
+      valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−20%",
+      definicao: "O agente deve demonstrar empatia e senso de urgência compatível com a situação do cliente — especialmente em casos de reclamações ou problemas operacionais graves. Respostas curtas e mecânicas, sem acolhimento, podem ser interpretadas como frieza mesmo sem intenção.",
+      fazer: `Cliente: 'Estou há 3 dias tentando resolver isso e ninguém me ajuda!'\n\nAgente: 'Entendo sua frustração e me desculpe pela demora. Vou priorizar seu caso agora mesmo e garantir que você tenha uma resposta até hoje. Pode me confirmar o número do chamado?'\n\n→ Tom empático, reconhece o problema, oferece ação concreta. ✓`,
+      nao_fazer: `Cliente: 'Isso é um absurdo, nunca funciona nada!'\n\nAgente: 'Já expliquei como funciona. Se tiver mais dúvidas, é só chamar.'\n\n→ Tom frio e dismissivo, sem acolhimento da insatisfação. ✗\n\nOutro exemplo ✗: Agente responde com 'Ok.' ou 'Entendido.' para reclamações graves, sem demonstrar empatia.`
+    },
+    {
+      num: 6, bloco: "COMPLIANCE", cat: "compliance",
+      pergunta: "O agente compartilhou ou confirmou dados pessoais sensíveis sem seguir o protocolo de verificação de identidade?",
+      objetivo: "Proteger os dados dos clientes e a Turbi de violações de privacidade e LGPD. O compartilhamento indevido de dados sensíveis gera riscos jurídicos, perda de confiança e danos à reputação.",
+      valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−100%",
+      definicao: "O agente deve verificar a identidade do cliente antes de confirmar ou compartilhar qualquer dado sensível (CPF, dados bancários, endereço, dados do veículo). Nunca compartilhar dados de terceiros. Em caso de dúvida, escalar para supervisão.",
+      fazer: `Correto (NÃO houve violação) ✓:\nAgente: 'Para confirmar sua identidade, pode me informar o CPF cadastrado e o e-mail da conta?'\nCliente: [fornece os dados]\nAgente: 'Confirmado! Agora posso te ajudar com os detalhes da sua reserva.'\n\n→ Verificação de identidade realizada antes de compartilhar informações. ✓`,
+      nao_fazer: `Cliente: 'Qual é o CPF do motorista que estava no carro antes de mim?'\n\nAgente: 'O CPF dele é 123.456.789-00.'\n\n→ Compartilhou dados de terceiro sem nenhuma justificativa ou protocolo. ✗ Violação grave de LGPD.\n\nOutro exemplo ✗: Agente confirma dados bancários do cliente sem verificar identidade previamente.`
+    }
   ],
   assincrono: [
-    { value: "CONDUCAO_1",    label: "Condução 1 — Clareza na comunicação" },
-    { value: "CONDUCAO_2",    label: "Condução 2 — Completude nas respostas" },
-    { value: "COMPORTAMENTO_1", label: "Comportamento 1 — Encerramento adequado" },
-    { value: "COMPORTAMENTO_2", label: "Comportamento 2 — Tom e empatia" },
-    { value: "COMPLIANCE_1",  label: "Compliance — Verificação de identidade/dados" },
+    {
+      num: 1, bloco: "CONDUÇÃO", cat: "conduao",
+      pergunta: "A comunicação do agente foi clara e o cliente compreendeu a mensagem transmitida?",
+      objetivo: "Garantir que o cliente saia do contato com a informação corretamente assimilada, sem necessidade de recontato para esclarecimento da mesma dúvida. Mensagens ambíguas, técnicas ou incompletas impactam diretamente a satisfação e o volume de chamados.",
+      valor_padrao: "SIM", pts_pos: "+25%", var_neg: "NÃO", pts_neg: "−25%",
+      definicao: "O cliente deve sair sem dúvidas e com uma solução direta. O agente usa palavras simples, organiza a explicação de forma lógica e confirma o entendimento antes de finalizar. Evitar: respostas monossilábicas ('ok', 'certo'), repetição da mesma justificativa quando o cliente não entendeu.",
+      fazer: `Cliente pergunta: 'Então meu carro vai ser trocado?'\n\nAgente: 'Sim! Vou abrir o chamado agora mesmo para a troca. Você receberá uma notificação no app em até 2 horas com o local de retirada do novo veículo. Tem mais alguma dúvida?'\n\n→ Cliente responde: 'Perfeito, obrigado!' ✓\nInformação completa, confirmação clara.`,
+      nao_fazer: `Cliente: 'Não entendi como funciona o desbloqueio.'\n\nAgente: 'O desbloqueio é feito pelo app, como já mencionei na mensagem anterior.'\n\n→ Repete a mesma resposta sem adaptar a explicação. ✗\n\nOutro exemplo ✗: Agente usa termos técnicos internos: 'Sua reserva está com status CKI pendente no sistema.'`
+    },
+    {
+      num: 2, bloco: "CONDUÇÃO", cat: "conduao",
+      pergunta: "O agente respondeu a todas as perguntas e solicitações feitas pelo cliente?",
+      objetivo: "Assegurar que nenhum questionamento — explícito ou implícito — fique sem resposta ao longo do atendimento. Perguntas ignoradas geram recontatos, insatisfação e baixa percepção de resolutividade (First Contact Resolution).",
+      valor_padrao: "SIM", pts_pos: "+25%", var_neg: "NÃO", pts_neg: "−25%",
+      definicao: "O agente lê toda a mensagem do cliente antes de responder e garante que cada dúvida seja endereçada. Quando há encaminhamento (prazo, chamado aberto), isso também conta como resposta válida. Evitar: inativar o chat com perguntas pendentes, enviar prints sem contexto.",
+      fazer: `Cliente: 'Quanto tempo leva a troca? E minha caução vai ser devolvida?'\n\nAgente: 'A troca de veículo leva em média 24h úteis após a aprovação do chamado. Sobre a caução: ela é liberada em até 7 dias úteis após a devolução do carro atual. Posso ajudar com mais alguma coisa?'\n\n→ Ambas as perguntas foram respondidas de forma completa. ✓`,
+      nao_fazer: `Cliente: 'Quando meu carro fica pronto? E como faço para pegar o carro novo?'\n\nAgente: 'Seu carro fica pronto em 2 dias.'\n\n→ A segunda pergunta ('como pego o carro novo?') foi ignorada. ✗\n\nOutro exemplo ✗: Agente envia print de tela sem explicar o que o cliente deve observar.`
+    },
+    {
+      num: 3, bloco: "COMPORTAMENTO", cat: "comportamento",
+      pergunta: "O agente encerrou o atendimento de forma abrupta, sem despedida ou com perguntas do cliente sem resposta?",
+      objetivo: "Garantir que todo atendimento seja encerrado com qualidade — com uma despedida adequada e apenas após confirmar que o cliente não tem mais dúvidas. Encerramentos abruptos geram insatisfação imediata e impactam CSAT, NPS e a imagem da marca.",
+      valor_padrao: "NÃO", pts_pos: "+25%", var_neg: "SIM", pts_neg: "−25%",
+      definicao: "Todo atendimento deve ser encerrado com: (1) confirmação de que a demanda foi resolvida, (2) verificação se o cliente tem mais dúvidas, (3) frase de despedida. Não confundir com: inatividade do sistema, transferência para outro agente, ou retorno do cliente após pausa.",
+      fazer: `Agente: 'Seu chamado foi aberto com número #4521. Você receberá uma atualização em até 24h. Posso ajudar com mais alguma coisa?'\nCliente: 'Não, obrigado.'\nAgente: 'Ótimo! Fico à disposição. Tenha um ótimo dia! 😊' ✓`,
+      nao_fazer: `Agente: 'Seu chamado foi registrado.' [encerra o chat]\n\n→ Nenhuma verificação se o cliente tem dúvidas, sem despedida. ✗\n\nAtenção — NÃO pontuar como SIM:\n• Última mensagem: 'Este atendimento foi encerrado automaticamente por inatividade.' [mensagem do sistema]\n• Agente retorna após pausa: 'Olá! Posso te ajudar?' [reinício = novo atendimento]`
+    },
+    {
+      num: 4, bloco: "COMPORTAMENTO", cat: "comportamento",
+      pergunta: "O agente demonstrou descaso, frieza, deboche ou sarcasmo durante o atendimento?",
+      objetivo: "Garantir que o tom do agente seja empático, respeitoso e profissional em todas as interações. Comportamentos de descaso ou deboche comprometem a experiência do cliente e a imagem da Turbi, podendo gerar escaladas, reclamações públicas e cancelamentos.",
+      valor_padrao: "NÃO", pts_pos: "+25%", var_neg: "SIM", pts_neg: "−25%",
+      definicao: "O agente deve demonstrar empatia e senso de urgência compatível com a situação do cliente — especialmente em casos de reclamações ou problemas operacionais graves. Respostas curtas e mecânicas, sem acolhimento, podem ser interpretadas como frieza mesmo sem intenção.",
+      fazer: `Cliente: 'Estou há 3 dias tentando resolver isso e ninguém me ajuda!'\n\nAgente: 'Entendo sua frustração e me desculpe pela demora. Vou priorizar seu caso agora mesmo e garantir que você tenha uma resposta até hoje. Pode me confirmar o número do chamado?'\n\n→ Tom empático, reconhece o problema, oferece ação concreta. ✓`,
+      nao_fazer: `Cliente: 'Isso é um absurdo, nunca funciona nada!'\n\nAgente: 'Já expliquei como funciona. Se tiver mais dúvidas, é só chamar.'\n\n→ Tom frio e dismissivo, sem acolhimento da insatisfação. ✗\n\nOutro exemplo ✗: Agente responde com 'Ok.' ou 'Entendido.' para reclamações graves, sem demonstrar empatia.`
+    },
+    {
+      num: 5, bloco: "COMPLIANCE", cat: "compliance",
+      pergunta: "O agente compartilhou ou confirmou dados pessoais sensíveis sem seguir o protocolo de verificação de identidade?",
+      objetivo: "Proteger os dados dos clientes e a Turbi de violações de privacidade e LGPD. O compartilhamento indevido de dados sensíveis gera riscos jurídicos, perda de confiança e danos à reputação.",
+      valor_padrao: "NÃO", pts_pos: "+25%", var_neg: "SIM", pts_neg: "−100%",
+      definicao: "O agente deve verificar a identidade do cliente antes de confirmar ou compartilhar qualquer dado sensível (CPF, dados bancários, endereço, dados do veículo). Nunca compartilhar dados de terceiros. Em caso de dúvida, escalar para supervisão.",
+      fazer: `Correto (NÃO houve violação) ✓:\nAgente: 'Para confirmar sua identidade, pode me informar o CPF cadastrado e o e-mail da conta?'\nCliente: [fornece os dados]\nAgente: 'Confirmado! Agora posso te ajudar com os detalhes da sua reserva.'\n\n→ Verificação de identidade realizada antes de compartilhar informações. ✓`,
+      nao_fazer: `Cliente: 'Qual é o CPF do motorista que estava no carro antes de mim?'\n\nAgente: 'O CPF dele é 123.456.789-00.'\n\n→ Compartilhou dados de terceiro sem nenhuma justificativa ou protocolo. ✗ Violação grave de LGPD.\n\nOutro exemplo ✗: Agente confirma dados bancários do cliente sem verificar identidade previamente.`
+    }
   ]
 };
 
-// Array com todos os critérios únicos (sem o campo canal, usamos todos)
-const todosCriterios = [
-  { value: "CONDUCAO_1",    label: "Condução 1 — Clareza na comunicação" },
-  { value: "CONDUCAO_2",    label: "Condução 2 — Completude nas respostas" },
-  { value: "PROCESSOS_1",   label: "Processos — Orientação ao autoatendimento" },
-  { value: "COMPORTAMENTO_1", label: "Comportamento 1 — Encerramento adequado" },
-  { value: "COMPORTAMENTO_2", label: "Comportamento 2 — Tom e empatia" },
-  { value: "COMPLIANCE_1",  label: "Compliance — Verificação de identidade/dados" },
+let currentChannel = 'sincrono';
+let cardIdCounter = 0;
+
+function switchChannel(channel) {
+  currentChannel = channel;
+
+  // update tab styles
+  document.getElementById('tab-sincrono').classList.toggle('active', channel === 'sincrono');
+  document.getElementById('tab-assincrono').classList.toggle('active', channel === 'assincrono');
+
+  // update stats
+  const criteria = criteriaAll[channel];
+  const blocos = new Set(criteria.map(c => c.bloco)).size;
+  document.getElementById('stat-criterios').textContent = criteria.length;
+  document.getElementById('stat-blocos').textContent = blocos;
+
+  // show/hide processos filter
+  const btnProcessos = document.getElementById('btn-processos');
+  btnProcessos.style.display = channel === 'sincrono' ? '' : 'none';
+
+  // rebuild cards
+  buildCards(channel);
+
+  // reset filter to conduao
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn.conduao').classList.add('active');
+  document.querySelectorAll('#cards-container .card').forEach(card => {
+    card.style.display = card.dataset.cat === 'conduao' ? 'block' : 'none';
+  });
+  const first = document.querySelector('#cards-container .card[data-cat="conduao"]');
+  if (first) {
+    const body = first.querySelector('.card-body');
+    first.classList.add('open');
+    body.style.maxHeight = '9999px';
+    setTimeout(() => { body.style.maxHeight = body.scrollHeight + 'px'; }, 50);
+  }
 ];
-
-// ─── NORMALIZA NOME ──────────────────────────────────────────────────────────
-function toProperCase(str) {
-  if (!str) return '';
-  return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
 }
 
-// ─── UPLOAD DE IMAGEM (ImgBB) ────────────────────────────────────────────────
-function setUploadStatus(type, text) {
-  const el = document.getElementById('uploadStatus');
-  el.className = 'upload-status ' + type;
-  document.getElementById('uploadStatusIcon').innerHTML =
-    type === 'uploading' ? '<div class="upload-spinner"></div>' :
-    type === 'success'   ? '✅' : '❌';
-  document.getElementById('uploadStatusText').textContent = text;
-}
-
-async function handleImageUpload(input) {
-  const file = input.files[0];
-  if (!file) return;
-
-  // Preview local imediato
-  const reader = new FileReader();
-  reader.onload = e => {
-    const prev = document.getElementById('uploadPreview');
-    document.getElementById('uploadPreviewImg').src = e.target.result;
-    prev.style.display = 'block';
-  };
-  reader.readAsDataURL(file);
-
-  if (!IMGBB_API_KEY || IMGBB_API_KEY === 'SUA_CHAVE_AQUI') {
-    setUploadStatus('error', 'Configure IMGBB_API_KEY no topo do script para ativar o upload.');
-    return;
-  }
-
-  setUploadStatus('uploading', 'Enviando imagem…');
-
-  try {
-    const b64 = await new Promise((res, rej) => {
-      const r = new FileReader();
-      r.onload  = () => res(r.result.split(',')[1]);
-      r.onerror = rej;
-      r.readAsDataURL(file);
-    });
-
-    const form = new FormData();
-    form.append('key', IMGBB_API_KEY);
-    form.append('image', b64);
-    form.append('name', file.name.replace(/\.[^.]+$/, ''));
-
-    const resp = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: form });
-    const data = await resp.json();
-
-    if (data.success) {
-      const url = data.data.url;
-      document.getElementById('evidencia').value = url;
-      setUploadStatus('success', 'Imagem enviada! Link preenchido automaticamente.');
-    } else {
-      throw new Error(data.error?.message || 'Erro desconhecido');
-    }
-  } catch (err) {
-    setUploadStatus('error', 'Falha no upload: ' + err.message);
-  }
-}
-
-// Drag-and-drop
-document.addEventListener('DOMContentLoaded', () => {
-  const area = document.getElementById('uploadArea');
-  if (!area) return;
-  area.addEventListener('dragover',  e => { e.preventDefault(); area.classList.add('dragover'); });
-  area.addEventListener('dragleave', ()  => area.classList.remove('dragover'));
-  area.addEventListener('drop', e => {
-    e.preventDefault();
-    area.classList.remove('dragover');
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      const dt = new DataTransfer();
-      dt.items.add(file);
-      const input = document.getElementById('uploadInput');
-      input.files = dt.files;
-      handleImageUpload(input);
-    }
-  });
-});
-
-// ─── CARREGA PLANILHA DINAMICAMENTE ─────────────────────────────────────────
-async function carregarDadosPlanilha() {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
-  try {
-    const res = await fetch(url);
-    const text = await res.text();
-    // Remove o wrapper da callback do gviz
-    const json = JSON.parse(text.replace(/^[^\(]+\(/, '').replace(/\);\s*$/, ''));
-    const rows = json.table.rows;
-
-    const mapaEmail = new Map();
-    rows.forEach(row => {
-      if (!row.c) return;
-      const nome  = row.c[0]?.v?.toString().trim() || '';
-      const email = row.c[1]?.v?.toString().trim().toLowerCase() || '';
-      const lider = row.c[3]?.v?.toString().trim() || '';
-      const ilha  = row.c[6]?.v?.toString().trim() || '';
-      if (!nome || !email || !ilha) return; // ignora sem Ilha
-      // Mantém a entrada mais recente por email
-      mapaEmail.set(email, { nome, email, supervisor: toProperCase(lider), ilha });
-    });
-
-    const analistas = Array.from(mapaEmail.values())
-      .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
-
-    const supervisoresSet = new Set(
-      analistas.map(a => a.supervisor).filter(Boolean)
-    );
-    const supervisores = [...supervisoresSet].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-    popularDropdowns(analistas, supervisores);
-    console.log(`✅ Planilha carregada: ${analistas.length} analistas, ${supervisores.length} supervisores`);
-  } catch (err) {
-    console.warn('⚠️ Planilha indisponível, usando fallback.', err);
-    popularDropdowns(FALLBACK_ANALISTAS, FALLBACK_SUPERVISORES);
-  }
-}
-
-// ─── POPULA DROPDOWNS ───────────────────────────────────────────────────────
-function popularDropdowns(analistas, supervisores) {
-  // Monta mapa global
-  analistaMap = {};
-  analistas.forEach(a => { analistaMap[a.email] = a; });
-
-  // Dropdown analistas
-  const selAnalista = document.getElementById('analista');
-  selAnalista.innerHTML = '<option value="">Selecione o analista</option>';
-  analistas.forEach(a => {
-    const opt = document.createElement('option');
-    opt.value = a.email;
-    opt.textContent = a.nome;
-    selAnalista.appendChild(opt);
-  });
-  selAnalista.disabled = false;
-  document.getElementById('analista-loading').style.display = 'none';
-  selAnalista.style.display = '';
-  document.getElementById('analista-hint').style.display = '';
-
-  // Dropdown supervisores
-  const selSup = document.getElementById('supervisor');
-  selSup.innerHTML = '<option value="">Selecione o supervisor</option>';
-  supervisores.forEach(s => {
-    const opt = document.createElement('option');
-    opt.value = s;
-    opt.textContent = s;
-    selSup.appendChild(opt);
-  });
-  selSup.disabled = false;
-  document.getElementById('supervisor-loading').style.display = 'none';
-  selSup.style.display = '';
-  document.getElementById('supervisor-hint').style.display = '';
-}
-
-// ─── AUTO-FILL SUPERVISOR AO SELECIONAR ANALISTA ────────────────────────────
-function onAnalistaChange() {
-  const email = document.getElementById('analista').value;
-  const selSup = document.getElementById('supervisor');
-  selSup.classList.remove('auto-filled');
-
-  if (!email || !analistaMap[email]) return;
-
-  const sup = analistaMap[email].supervisor;
-  if (sup) {
-    selSup.value = sup;
-    selSup.classList.add('auto-filled');
-    // Remove a classe visual após 2s
-    setTimeout(() => selSup.classList.remove('auto-filled'), 2000);
-  }
-}
-
-// ─── CRITÉRIOS DINÂMICOS ─────────────────────────────────────────────────────
-let criterioCounter = 0;
-
-function buildCriterioItem(index) {
-  const div = document.createElement('div');
-  div.className = 'criterio-item';
-  div.dataset.index = index;
-
-  // Opções do dropdown - usa todos os critérios
-  let opts = '<option value="">Selecione o critério</option>';
-  todosCriterios.forEach(c => {
-    opts += `<option value="${c.value}">${c.label}</option>`;
-  });
-
-  div.innerHTML = `
-    <div class="criterio-item-header">
-      <span class="criterio-item-num">Critério ${index}</span>
-      <button type="button" class="btn-remove-criterio" onclick="removeCriterio(this)">✕ Remover</button>
-    </div>
-    <div class="field-row full">
-      <div class="field" id="field-criterio-${index}">
-        <label>Critério Contestado <span class="req">*</span></label>
-        <select name="criterio-sel">
-          ${opts}
-        </select>
-      </div>
-    </div>
-    <div class="field-row">
-      <div class="field">
-        <label>Avaliação Original <span class="req">*</span></label>
-        <div class="radio-group" id="field-avaliacao-original-${index}">
-          <div class="radio-option sim">
-            <input type="radio" name="avaliacao-original-${index}" id="orig-sim-${index}" value="SIM">
-            <label for="orig-sim-${index}">✅ SIM</label>
-          </div>
-          <div class="radio-option nao">
-            <input type="radio" name="avaliacao-original-${index}" id="orig-nao-${index}" value="NÃO">
-            <label for="orig-nao-${index}">❌ NÃO</label>
-          </div>
-        </div>
-      </div>
-      <div class="field">
-        <label>Avaliação Sugerida <span class="req">*</span></label>
-        <div class="radio-group" id="field-avaliacao-sugerida-${index}">
-          <div class="radio-option sim">
-            <input type="radio" name="avaliacao-sugerida-${index}" id="sug-sim-${index}" value="SIM">
-            <label for="sug-sim-${index}">✅ SIM</label>
-          </div>
-          <div class="radio-option nao">
-            <input type="radio" name="avaliacao-sugerida-${index}" id="sug-nao-${index}" value="NÃO">
-            <label for="sug-nao-${index}">❌ NÃO</label>
-          </div>
-        </div>
-      </div>
-    </div>`;
-  return div;
-}
-
-function addCriterio() {
-  criterioCounter++;
-  const container = document.getElementById('criterios-container');
-  container.appendChild(buildCriterioItem(criterioCounter));
-  atualizarBotoesRemover();
-}
-
-function removeCriterio(btn) {
-  const item = btn.closest('.criterio-item');
-  item.remove();
-  renumerarCriterios();
-  atualizarBotoesRemover();
-}
-
-function renumerarCriterios() {
-  document.querySelectorAll('.criterio-item').forEach((item, i) => {
-    item.querySelector('.criterio-item-num').textContent = `Critério ${i + 1}`;
-  });
-}
-
-function atualizarBotoesRemover() {
-  const items = document.querySelectorAll('.criterio-item');
-  items.forEach(item => {
-    item.querySelector('.btn-remove-criterio').style.display =
-      items.length > 1 ? 'inline-block' : 'none';
-  });
-}
-
-// ─── VALIDAÇÃO ──────────────────────────────────────────────────────────────
-function showFieldError(wrap, msg) {
-  const prev = wrap?.querySelector('.field-error-msg');
-  if (prev) prev.remove();
-  wrap?.classList.add('error');
-  const el = document.createElement('div');
-  el.className = 'field-error-msg';
-  el.textContent = msg;
-  wrap?.appendChild(el);
-}
-
-function clearFieldError(wrap) {
-  wrap?.querySelector('.field-error-msg')?.remove();
-  wrap?.classList.remove('error');
-}
-
-function validate() {
-  let ok = true;
-
-  // Campos fixos
-  const requiredFields = [
-    { id: 'chamado-id',   fieldId: 'field-chamado-id' },
-    { id: 'analista',     fieldId: 'field-analista' },
-    { id: 'supervisor',   fieldId: 'field-supervisor' },
-    { id: 'justificativa',fieldId: 'field-justificativa' },
-  ];
-
-  requiredFields.forEach(f => {
-    const el   = document.getElementById(f.id);
-    const wrap = document.getElementById(f.fieldId);
-    clearFieldError(wrap);
-    if (!el?.value.trim()) { showFieldError(wrap, 'Campo obrigatório'); ok = false; }
-  });
-
-  // Valida cada critério
-  document.querySelectorAll('.criterio-item').forEach(item => {
-    const idx = item.dataset.index;
-    const sel  = item.querySelector('select[name="criterio-sel"]');
-    const wrapSel = item.querySelector(`#field-criterio-${idx}`);
-    clearFieldError(wrapSel);
-    if (!sel?.value) { showFieldError(wrapSel, 'Selecione o critério'); ok = false; }
-
-    ['avaliacao-original', 'avaliacao-sugerida'].forEach(name => {
-      const checked = item.querySelector(`input[name="${name}-${idx}"]:checked`);
-      const wrap = item.querySelector(`#field-${name}-${idx}`);
-      clearFieldError(wrap);
-      if (!checked) { showFieldError(wrap, 'Selecione uma opção'); ok = false; }
-    });
-  });
-
-  return ok;
-}
-
-// ─── SUBMISSÃO ──────────────────────────────────────────────────────────────
-document.getElementById('contestacao-form').addEventListener('submit', async function(e) {
-  e.preventDefault();
-
-  if (!validate()) {
-    const firstError = document.querySelector('.field.error input, .field.error select, .field.error textarea');
-    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return;
-  }
-
-  const btn = document.getElementById('btn-submit');
-  btn.disabled = true;
-  btn.textContent = 'Enviando...';
-
-  const analistaEmail = document.getElementById('analista').value;
-  const analistaNome  = analistaMap[analistaEmail]?.nome
-    || document.getElementById('analista').options[document.getElementById('analista').selectedIndex].text;
-
-  // Coleta todos os critérios
-  const criterios = [];
-  document.querySelectorAll('.criterio-item').forEach(item => {
-    const idx = item.dataset.index;
-    const sel = item.querySelector('select[name="criterio-sel"]');
-    criterios.push({
-      criterio:           sel.value,
-      criterio_label:     sel.options[sel.selectedIndex]?.text || '',
-      avaliacao_original: item.querySelector(`input[name="avaliacao-original-${idx}"]:checked`)?.value || '',
-      avaliacao_sugerida: item.querySelector(`input[name="avaliacao-sugerida-${idx}"]:checked`)?.value || ''
-    });
-  });
-
-  const payload = {
-    timestamp:     new Date().toISOString(),
-    chamado_id:    document.getElementById('chamado-id').value.trim(),
-    analista_email: analistaEmail,
-    analista_nome:  analistaNome,
-    supervisor:    document.getElementById('supervisor').value,
-    criterios,
-    justificativa: document.getElementById('justificativa').value.trim(),
-    evidencia:     document.getElementById('evidencia').value.trim() || null,
-    status:        'ABERTO'
-  };
-
-  // ── INTEGRAÇÃO APPS SCRIPT → GOOGLE SHEETS ───────────────────────────────
-  if (!APPS_SCRIPT_URL) {
-    // URL ainda não configurada: exibe aviso no console e segue para sucesso local
-    console.warn('⚠️ APPS_SCRIPT_URL não configurada. Os dados não foram salvos na planilha.');
-  } else {
-    try {
-      // Envia sem Content-Type explícito (evita preflight CORS)
-      await fetch(APPS_SCRIPT_URL, {
-        method:  'POST',
-        body:    JSON.stringify(payload),
-        headers: { 'Content-Type': 'text/plain' }
-      });
-    } catch (err) {
-      console.error('Erro ao enviar para Apps Script:', err);
-      btn.disabled = false;
-      btn.textContent = 'Registrar Reanálise';
-      mostrarErroEnvio('Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.');
-      return;
-    }
-  }
-  // ─────────────────────────────────────────────────────────────────────────
-
-  document.getElementById('contestacao-form').style.display = 'none';
-  document.getElementById('success-card').style.display = 'block';
-  const criteriosLabel = payload.criterios.map(c => c.criterio_label).join(', ');
-  document.getElementById('success-meta').innerHTML =
-    `<strong>Chamado:</strong> ${payload.chamado_id}<br>` +
-    `<strong>Analista:</strong> ${payload.analista_nome}<br>` +
-    `<strong>Critério(s):</strong> ${criteriosLabel}<br>` +
-    `<strong>Registrado por:</strong> ${payload.supervisor}<br>` +
-    `<strong>Protocolo:</strong> CONT-${Date.now()}`;
-});
-
-// ─── MENSAGEM DE ERRO DE ENVIO ───────────────────────────────────────────────
-function mostrarErroEnvio(msg) {
-  let el = document.getElementById('send-error-msg');
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'send-error-msg';
-    el.style.cssText = 'margin-top:12px;padding:12px 16px;background:#FEF2F2;color:#B91C1C;border-radius:8px;font-size:13px;border:1px solid #FECACA;';
-    document.getElementById('btn-submit').insertAdjacentElement('afterend', el);
-  }
-  el.textContent = '⚠️ ' + msg;
-  el.style.display = 'block';
-}
-
-// ─── NOVA CONTESTAÇÃO ───────────────────────────────────────────────────────
-function novaCont() {
-  document.getElementById('contestacao-form').reset();
-  document.getElementById('supervisor').classList.remove('auto-filled');
-  document.querySelectorAll('.field.error').forEach(f => f.classList.remove('error'));
-  document.querySelectorAll('.field-error-msg').forEach(m => m.remove());
-  // Reinicia critérios
-  const container = document.getElementById('criterios-container');
+function buildCards() {
+function buildCards(channel) {
+  const container = document.getElementById('cards-container');
+  criteria.forEach(c => {
   container.innerHTML = '';
-  criterioCounter = 0;
-  addCriterio();
-  document.getElementById('contestacao-form').style.display = '';
-  document.getElementById('success-card').style.display = 'none';
-  document.getElementById('btn-submit').disabled = false;
-  document.getElementById('btn-submit').textContent = 'Registrar Reanálise';
-  const errMsg = document.getElementById('send-error-msg');
-  if (errMsg) errMsg.style.display = 'none';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  cardIdCounter++;
+  const prefix = channel + '_' + cardIdCounter + '_';
+
+  criteriaAll[channel].forEach(c => {
+    const card = document.createElement('div');
+    card.className = `card ${c.cat}`;
+    card.dataset.cat = c.cat;
+
+    const scoreDisplay = c.num === 6
+    const scoreDisplay = c.cat === 'compliance'
+      ? `${c.var_neg} = ${c.pts_neg}`
+      : `${c.valor_padrao} = ${c.pts_pos} · ${c.var_neg} = ${c.pts_neg}`;
+
+    const objId = prefix + 'obj-' + c.num;
+    const exId = prefix + 'ex-' + c.num;
+
+    card.innerHTML = `
+      <div class="card-trigger" onclick="toggleCard(this)">
+        <div class="num-badge">${c.num}</div>
+@@ -269,10 +411,10 @@ <h1>Formulário de Monitoria<br>de Qualidade</h1>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="steps">
+            <div class="step active" onclick="switchTab(this, 'obj-${c.num}')">① Objetivo</div>
+            <div class="step" onclick="switchTab(this, 'ex-${c.num}')">② O que fazer / não fazer</div>
+            <div class="step active" onclick="switchTab(this, '${objId}')">① Objetivo</div>
+            <div class="step" onclick="switchTab(this, '${exId}')">② O que fazer / não fazer</div>
+          </div>
+          <div class="panel active" id="obj-${c.num}">
+          <div class="panel active" id="${objId}">
+            <div class="obj-grid">
+              <div class="obj-box" style="grid-column: 1 / -1;">
+                <div class="obj-box-label">Objetivo do critério</div>
+@@ -297,7 +439,7 @@ <h1>Formulário de Monitoria<br>de Qualidade</h1>
+              </div>
+            </div>
+          </div>
+          <div class="panel" id="ex-${c.num}">
+          <div class="panel" id="${exId}">
+            <div class="ex-grid">
+              <div class="ex-box fazer">
+                <div class="ex-label fazer">✅ O que fazer</div>
+@@ -346,31 +488,17 @@ <h1>Formulário de Monitoria<br>de Qualidade</h1>
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (cat === 'all') {
+    btn.classList.add('active');
+    document.querySelectorAll('.card').forEach(card => { card.style.display = 'block'; });
+    document.querySelectorAll('#cards-container .card').forEach(card => { card.style.display = 'block'; });
+  } else {
+    btn.classList.add('active');
+    document.querySelectorAll('.card').forEach(card => {
+    document.querySelectorAll('#cards-container .card').forEach(card => {
+      card.style.display = card.dataset.cat === cat ? 'block' : 'none';
+    });
+  }
 }
 
-// ─── INICIALIZA ──────────────────────────────────────────────────────────────
-addCriterio(); // cria o primeiro critério ao carregar
-carregarDadosPlanilha();
-</script>
+buildCards();
 
+(function() {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn.conduao').classList.add('active');
+  document.querySelectorAll('.card').forEach(card => {
+    card.style.display = card.dataset.cat === 'conduao' ? 'block' : 'none';
+  });
+  const first = document.querySelector('.card[data-cat="conduao"]');
+  if (first) {
+    const body = first.querySelector('.card-body');
+    first.classList.add('open');
+    body.style.maxHeight = '9999px';
+    setTimeout(() => { body.style.maxHeight = body.scrollHeight + 'px'; }, 50);
+  }
+})();
+// Initialize
+switchChannel('sincrono');
+</script>
 </body>
 </html>
