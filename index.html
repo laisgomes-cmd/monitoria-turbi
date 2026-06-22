@@ -1,12 +1,77 @@
-formulario interativo_monitoria jun-26.html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-@@ -73,7 +72,49 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulário de Monitoria de Qualidade — Turbi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #221DA9;
+    --blue-light: #3730d4;
+    --cyan: #41B6E6;
+    --dark: #06091C;
+    --conduao: #2234E0;
+    --conduao-bg: #ECEFFE;
+    --processos: #6B7EE8;
+    --processos-bg: #F0F2FF;
+    --comportamento: #D97706;
+    --comportamento-bg: #FEF3C7;
+    --compliance: #EF4444;
+    --compliance-bg: #FEF2F2;
+    --gray: #6B7280;
+    --gray-light: #F9FAFB;
+    --green: #16A34A;
+    --green-bg: #F0FDF4;
+    --red: #DC2626;
+    --red-bg: #FEF2F2;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', 'Segoe UI', system-ui, sans-serif;
+    background: #F1F5FF;
+    color: #1e1e2e;
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--dark);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 32px;
+    border-bottom: 3px solid var(--cyan);
+  }
+  .logo-pin { width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .logo-pin img { width: 40px; height: 40px; object-fit: contain; }
+
+  .hero {
+    background: linear-gradient(135deg, var(--blue) 0%, #3730d4 60%, #6B7EE8 100%);
+    padding: 48px 32px 40px;
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .hero h1 { font-size: 28px; font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+  .hero p { font-size: 14px; color: rgba(255,255,255,0.75); max-width: 600px; line-height: 1.6; }
+  .hero-stats { display: flex; gap: 24px; margin-top: 28px; flex-wrap: wrap; justify-content: center; }
+  .stat { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 12px 20px; text-align: center; backdrop-filter: blur(4px); }
   .stat-n { font-size: 26px; font-weight: 800; color: var(--cyan); }
   .stat-l { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; letter-spacing: 0.05em; text-transform: uppercase; }
 
-  .filters { display: flex; gap: 8px; flex-wrap: wrap; padding: 20px 32px 0; align-items: center; }
   /* Channel tabs */
   .channel-tabs {
     display: flex;
@@ -53,20 +118,88 @@ formulario interativo_monitoria jun-26.html
   .filter-label { font-size: 12px; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
   .filter-btn { padding: 6px 14px; border-radius: 20px; border: 2px solid transparent; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; letter-spacing: 0.04em; text-transform: uppercase; }
   .filter-btn.all { background: var(--blue); color: white; border-color: var(--blue); }
-@@ -84,7 +125,7 @@
+  .filter-btn.conduao { background: var(--conduao-bg); color: var(--conduao); border-color: var(--conduao); }
+  .filter-btn.processos { background: var(--processos-bg); color: var(--processos); border-color: var(--processos); }
+  .filter-btn.comportamento { background: var(--comportamento-bg); color: var(--comportamento); border-color: var(--comportamento); }
+  .filter-btn.compliance { background: var(--compliance-bg); color: var(--compliance); border-color: var(--compliance); }
   .filter-btn:not(.active) { opacity: 0.45; }
   .filter-btn.active { opacity: 1; }
 
-  main { padding: 24px 32px 60px; max-width: 900px; margin: 0 auto; }
   main { padding: 16px 32px 60px; max-width: 900px; margin: 0 auto; }
 
   .card { background: white; border-radius: 14px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(34,29,169,0.07); overflow: hidden; transition: box-shadow 0.2s; border: 1.5px solid transparent; }
   .card:hover { box-shadow: 0 4px 20px rgba(34,29,169,0.13); }
-@@ -159,102 +200,203 @@
+  .card.open { border-color: rgba(34,29,169,0.15); box-shadow: 0 4px 20px rgba(34,29,169,0.13); }
+
+  .card-trigger { display: flex; align-items: center; gap: 14px; padding: 18px 22px; cursor: pointer; user-select: none; transition: background 0.15s; }
+  .card-trigger:hover { background: #FAFBFF; }
+
+  .num-badge { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: white; }
+  .bloco-tag { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.06em; flex-shrink: 0; }
+  .trigger-question { flex: 1; font-size: 14px; font-weight: 600; color: #1e1e2e; line-height: 1.4; }
+  .score-pill { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 8px; background: #F3F4F6; color: var(--gray); flex-shrink: 0; white-space: nowrap; }
+  .chevron { width: 20px; height: 20px; flex-shrink: 0; color: #9CA3AF; transition: transform 0.25s; }
+  .card.open .chevron { transform: rotate(180deg); }
+
+  .card-body { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1); }
+  .card-body-inner { padding: 0 22px 22px; }
+
+  .steps { display: flex; gap: 0; margin-bottom: 20px; padding-top: 4px; }
+  .step { flex: 1; padding: 9px 14px; font-size: 11px; font-weight: 700; text-align: center; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; border-bottom: 3px solid #E5E7EB; color: #9CA3AF; transition: all 0.2s; }
+  .step.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  .obj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 4px; }
+  @media (max-width: 600px) { .obj-grid { grid-template-columns: 1fr; } }
+  .obj-box { background: #F8F9FF; border: 1px solid #E5E7EB; border-radius: 10px; padding: 14px; }
+  .obj-box-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--gray); margin-bottom: 6px; }
+  .obj-box p { font-size: 13px; color: #374151; line-height: 1.55; }
+
+  .score-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .score-box { flex: 1; min-width: 100px; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
+  .score-box.pos { background: var(--green-bg); border: 1px solid #BBF7D0; }
+  .score-box.neg { background: var(--red-bg); border: 1px solid #FECACA; }
+  .score-icon { font-size: 20px; }
+  .score-val { font-size: 16px; font-weight: 800; }
+  .score-box.pos .score-val { color: var(--green); }
+  .score-box.neg .score-val { color: var(--red); }
+  .score-cond { font-size: 11px; color: var(--gray); margin-top: 1px; }
+
+  .ex-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 600px) { .ex-grid { grid-template-columns: 1fr; } }
+  .ex-box { border-radius: 10px; padding: 16px; }
+  .ex-box.fazer { background: var(--green-bg); border: 1px solid #BBF7D0; }
+  .ex-box.nao { background: var(--red-bg); border: 1px solid #FECACA; }
+  .ex-label { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .ex-label.fazer { color: var(--green); }
+  .ex-label.nao { color: var(--red); }
+  .ex-text { font-size: 12.5px; color: #374151; line-height: 1.6; white-space: pre-wrap; }
+
+  .divider { height: 1px; background: #F3F4F6; margin: 0 22px; }
+
+  .conduao .num-badge { background: var(--conduao); }
+  .processos .num-badge { background: var(--processos); }
+  .comportamento .num-badge { background: var(--comportamento); }
+  .compliance .num-badge { background: var(--compliance); }
+  .conduao .bloco-tag { background: var(--conduao-bg); color: var(--conduao); }
+  .processos .bloco-tag { background: var(--processos-bg); color: var(--processos); }
+  .comportamento .bloco-tag { background: var(--comportamento-bg); color: var(--comportamento); }
+  .compliance .bloco-tag { background: var(--compliance-bg); color: var(--compliance); }
+  .conduao .step.active { color: var(--conduao); border-bottom-color: var(--conduao); }
+  .processos .step.active { color: var(--processos); border-bottom-color: var(--processos); }
+  .comportamento .step.active { color: var(--comportamento); border-bottom-color: var(--comportamento); }
+  .compliance .step.active { color: var(--compliance); border-bottom-color: var(--compliance); }
+
+  footer { text-align: center; padding: 20px; font-size: 11px; color: #9CA3AF; }
+</style>
+</head>
+<body>
 
 <header>
   <div class="header-inner">
-    <div class="logo-pin"><img src="data:image/png;base64,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" alt="Turbi"></div>
     <div class="logo-pin"><img src="data:image/png;base64,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" alt="Turbi"></div>
   </div>
 </header>
@@ -74,9 +207,6 @@ formulario interativo_monitoria jun-26.html
 <div class="hero">
   <h1>Formulário de Monitoria<br>de Qualidade</h1>
   <p>Clique em cada critério para ver a pergunta de avaliação, objetivo e exemplos práticos de o que fazer e o que não fazer.</p>
-  <div class="hero-stats">
-    <div class="stat"><div class="stat-n">6</div><div class="stat-l">Critérios</div></div>
-    <div class="stat"><div class="stat-n">4</div><div class="stat-l">Blocos</div></div>
   <div class="hero-stats" id="hero-stats">
     <div class="stat"><div class="stat-n" id="stat-criterios">6</div><div class="stat-l">Critérios</div></div>
     <div class="stat"><div class="stat-n" id="stat-blocos">4</div><div class="stat-l">Blocos</div></div>
@@ -84,7 +214,6 @@ formulario interativo_monitoria jun-26.html
   </div>
 </div>
 
-<div class="filters">
 <!-- Channel tabs -->
 <div class="channel-tabs">
   <button class="channel-tab active" id="tab-sincrono" onclick="switchChannel('sincrono')">📞 Síncrono</button>
@@ -94,12 +223,8 @@ formulario interativo_monitoria jun-26.html
 
 <div class="filters" id="filters-container">
   <span class="filter-label">Filtrar:</span>
-  <button class="filter-btn all active" onclick="filterCards('all', this)">Todos</button>
   <button class="filter-btn all" onclick="filterCards('all', this)">Todos</button>
   <button class="filter-btn conduao active" onclick="filterCards('conduao', this)">Condução</button>
-  <button class="filter-btn processos active" onclick="filterCards('processos', this)">Processos</button>
-  <button class="filter-btn comportamento active" onclick="filterCards('comportamento', this)">Comportamento</button>
-  <button class="filter-btn compliance active" onclick="filterCards('compliance', this)">Compliance</button>
   <button id="btn-processos" class="filter-btn processos" onclick="filterCards('processos', this)">Processos</button>
   <button class="filter-btn comportamento" onclick="filterCards('comportamento', this)">Comportamento</button>
   <button class="filter-btn compliance" onclick="filterCards('compliance', this)">Compliance</button>
@@ -110,60 +235,6 @@ formulario interativo_monitoria jun-26.html
 <footer>turbi · Formulário de Monitoria de Qualidade · Junho 2026 · Uso interno</footer>
 
 <script>
-const criteria = [
-  {
-    num: 1, bloco: "CONDUÇÃO", cat: "conduao",
-    pergunta: "A comunicação do agente foi clara e o cliente compreendeu a mensagem transmitida?",
-    objetivo: "Garantir que o cliente saia do contato com a informação corretamente assimilada, sem necessidade de recontato para esclarecimento da mesma dúvida. Mensagens ambíguas, técnicas ou incompletas impactam diretamente a satisfação e o volume de chamados.",
-    valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
-    definicao: "O cliente deve sair sem dúvidas e com uma solução direta. O agente usa palavras simples, organiza a explicação de forma lógica e confirma o entendimento antes de finalizar. Evitar: respostas monossilábicas ('ok', 'certo'), repetição da mesma justificativa quando o cliente não entendeu.",
-    fazer: `Cliente pergunta: 'Então meu carro vai ser trocado?'\n\nAgente: 'Sim! Vou abrir o chamado agora mesmo para a troca. Você receberá uma notificação no app em até 2 horas com o local de retirada do novo veículo. Tem mais alguma dúvida?'\n\n→ Cliente responde: 'Perfeito, obrigado!' ✓\nInformação completa, confirmação clara.`,
-    nao_fazer: `Cliente: 'Não entendi como funciona o desbloqueio.'\n\nAgente: 'O desbloqueio é feito pelo app, como já mencionei na mensagem anterior.'\n\n→ Repete a mesma resposta sem adaptar a explicação. ✗\n\nOutro exemplo ✗: Agente usa termos técnicos internos: 'Sua reserva está com status CKI pendente no sistema.'`
-  },
-  {
-    num: 2, bloco: "CONDUÇÃO", cat: "conduao",
-    pergunta: "O agente respondeu a todas as perguntas e solicitações feitas pelo cliente?",
-    objetivo: "Assegurar que nenhum questionamento — explícito ou implícito — fique sem resposta ao longo do atendimento. Perguntas ignoradas geram recontatos, insatisfação e baixa percepção de resolutividade (First Contact Resolution).",
-    valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
-    definicao: "O agente lê toda a mensagem do cliente antes de responder e garante que cada dúvida seja endereçada. Quando há encaminhamento (prazo, chamado aberto), isso também conta como resposta válida. Evitar: inativar o chat com perguntas pendentes, enviar prints sem contexto.",
-    fazer: `Cliente: 'Quanto tempo leva a troca? E minha caução vai ser devolvida?'\n\nAgente: 'A troca de veículo leva em média 24h úteis após a aprovação do chamado. Sobre a caução: ela é liberada em até 7 dias úteis após a devolução do carro atual. Posso ajudar com mais alguma coisa?'\n\n→ Ambas as perguntas foram respondidas de forma completa. ✓`,
-    nao_fazer: `Cliente: 'Quando meu carro fica pronto? E como faço para pegar o carro novo?'\n\nAgente: 'Seu carro fica pronto em 2 dias.'\n\n→ A segunda pergunta ('como pego o carro novo?') foi ignorada. ✗\n\nOutro exemplo ✗: Agente envia print de tela sem explicar o que o cliente deve observar.`
-  },
-  {
-    num: 3, bloco: "PROCESSOS", cat: "processos",
-    pergunta: "O agente orientou o cliente a utilizar o autoatendimento quando o processo estava disponível no app?",
-    objetivo: "Fomentar a autonomia digital do cliente, reduzindo dependência do suporte humano para processos que podem ser resolvidos via app. Impacta diretamente a taxa de contato e a eficiência operacional.",
-    valor_padrao: "SIM", pts_pos: "+20%", var_neg: "NÃO", pts_neg: "−20%",
-    definicao: "Para processos disponíveis no app, o agente orienta o passo a passo antes de resolver. Se o cliente já sabe como fazer ou confirma que vai realizar, avaliar como N/A. O documento de processos de autoatendimento deve ser consultado e atualizado sempre que novos processos forem lançados.",
-    fazer: `Cliente: 'Preciso atualizar minha forma de pagamento.'\n\nAgente: 'Você pode fazer isso direto no app! Vá em Perfil > Pagamentos > Adicionar cartão. É rápido e fica disponível para sua próxima reserva. Quer que eu te ajude com mais alguma coisa?'\n\n→ Orientou o autoatendimento antes de oferecer qualquer outra solução. ✓`,
-    nao_fazer: `Cliente: 'Quero cancelar minha reserva.'\n\nAgente: 'Ok, vou cancelar para você.' [cancela pelo sistema]\n\n→ Não orientou que o cliente poderia cancelar diretamente pelo app. ✗\n\nOutro exemplo ✗: Escalou para outro canal sem antes informar que a solicitação poderia ser feita pelo app.`
-  },
-  {
-    num: 4, bloco: "COMPORTAMENTO", cat: "comportamento",
-    pergunta: "O agente encerrou o atendimento de forma abrupta, sem despedida ou com perguntas do cliente sem resposta?",
-    objetivo: "Garantir que todo atendimento seja encerrado com qualidade — com uma despedida adequada e apenas após confirmar que o cliente não tem mais dúvidas. Encerramentos abruptos geram insatisfação imediata e impactam CSAT, NPS e a imagem da marca.",
-    valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−20%",
-    definicao: "Todo atendimento deve ser encerrado com: (1) confirmação de que a demanda foi resolvida, (2) verificação se o cliente tem mais dúvidas, (3) frase de despedida. Não confundir com: inatividade do sistema, transferência para outro agente, ou retorno do cliente após pausa.",
-    fazer: `Agente: 'Seu chamado foi aberto com número #4521. Você receberá uma atualização em até 24h. Posso ajudar com mais alguma coisa?'\nCliente: 'Não, obrigado.'\nAgente: 'Ótimo! Fico à disposição. Tenha um ótimo dia! 😊' ✓`,
-    nao_fazer: `Agente: 'Seu chamado foi registrado.' [encerra o chat]\n\n→ Nenhuma verificação se o cliente tem dúvidas, sem despedida. ✗\n\nAtenção — NÃO pontuar como SIM:\n• Última mensagem: 'Este atendimento foi encerrado automaticamente por inatividade.' [mensagem do sistema]\n• Agente retorna após pausa: 'Olá! Posso te ajudar?' [reinício = novo atendimento]`
-  },
-  {
-    num: 5, bloco: "COMPORTAMENTO", cat: "comportamento",
-    pergunta: "O agente demonstrou descaso, frieza, deboche ou sarcasmo durante o atendimento?",
-    objetivo: "Garantir que o tom do agente seja empático, respeitoso e profissional em todas as interações. Comportamentos de descaso ou deboche comprometem a experiência do cliente e a imagem da Turbi, podendo gerar escaladas, reclamações públicas e cancelamentos.",
-    valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−20%",
-    definicao: "O agente deve demonstrar empatia e senso de urgência compatível com a situação do cliente — especialmente em casos de reclamações ou problemas operacionais graves. Respostas curtas e mecânicas, sem acolhimento, podem ser interpretadas como frieza mesmo sem intenção.",
-    fazer: `Cliente: 'Estou há 3 dias tentando resolver isso e ninguém me ajuda!'\n\nAgente: 'Entendo sua frustração e me desculpe pela demora. Vou priorizar seu caso agora mesmo e garantir que você tenha uma resposta até hoje. Pode me confirmar o número do chamado?'\n\n→ Tom empático, reconhece o problema, oferece ação concreta. ✓`,
-    nao_fazer: `Cliente: 'Isso é um absurdo, nunca funciona nada!'\n\nAgente: 'Já expliquei como funciona. Se tiver mais dúvidas, é só chamar.'\n\n→ Tom frio e dismissivo, sem acolhimento da insatisfação. ✗\n\nOutro exemplo ✗: Agente responde com 'Ok.' ou 'Entendido.' para reclamações graves, sem demonstrar empatia.`
-  },
-  {
-    num: 6, bloco: "COMPLIANCE", cat: "compliance",
-    pergunta: "O agente compartilhou ou confirmou dados pessoais sensíveis sem seguir o protocolo de verificação de identidade?",
-    objetivo: "Proteger os dados dos clientes e a Turbi de violações de privacidade e LGPD. O compartilhamento indevido de dados sensíveis gera riscos jurídicos, perda de confiança e danos à reputação.",
-    valor_padrao: "NÃO", pts_pos: "+20%", var_neg: "SIM", pts_neg: "−100%",
-    definicao: "O agente deve verificar a identidade do cliente antes de confirmar ou compartilhar qualquer dado sensível (CPF, dados bancários, endereço, dados do veículo). Nunca compartilhar dados de terceiros. Em caso de dúvida, escalar para supervisão.",
-    fazer: `Correto (NÃO houve violação) ✓:\nAgente: 'Para confirmar sua identidade, pode me informar o CPF cadastrado e o e-mail da conta?'\nCliente: [fornece os dados]\nAgente: 'Confirmado! Agora posso te ajudar com os detalhes da sua reserva.'\n\n→ Verificação de identidade realizada antes de compartilhar informações. ✓`,
-    nao_fazer: `Cliente: 'Qual é o CPF do motorista que estava no carro antes de mim?'\n\nAgente: 'O CPF dele é 123.456.789-00.'\n\n→ Compartilhou dados de terceiro sem nenhuma justificativa ou protocolo. ✗ Violação grave de LGPD.\n\nOutro exemplo ✗: Agente confirma dados bancários do cliente sem verificar identidade previamente.`
 const criteriaAll = {
   sincrono: [
     {
@@ -306,13 +377,10 @@ function switchChannel(channel) {
     body.style.maxHeight = '9999px';
     setTimeout(() => { body.style.maxHeight = body.scrollHeight + 'px'; }, 50);
   }
-];
 }
 
-function buildCards() {
 function buildCards(channel) {
   const container = document.getElementById('cards-container');
-  criteria.forEach(c => {
   container.innerHTML = '';
   cardIdCounter++;
   const prefix = channel + '_' + cardIdCounter + '_';
@@ -322,7 +390,6 @@ function buildCards(channel) {
     card.className = `card ${c.cat}`;
     card.dataset.cat = c.cat;
 
-    const scoreDisplay = c.num === 6
     const scoreDisplay = c.cat === 'compliance'
       ? `${c.var_neg} = ${c.pts_neg}`
       : `${c.valor_padrao} = ${c.pts_pos} · ${c.var_neg} = ${c.pts_neg}`;
@@ -333,60 +400,103 @@ function buildCards(channel) {
     card.innerHTML = `
       <div class="card-trigger" onclick="toggleCard(this)">
         <div class="num-badge">${c.num}</div>
-@@ -269,10 +411,10 @@ <h1>Formulário de Monitoria<br>de Qualidade</h1>
+        <span class="bloco-tag">${c.bloco}</span>
+        <span class="trigger-question">${c.pergunta}</span>
+        <span class="score-pill">${scoreDisplay}</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div class="divider"></div>
       <div class="card-body">
         <div class="card-body-inner">
           <div class="steps">
-            <div class="step active" onclick="switchTab(this, 'obj-${c.num}')">① Objetivo</div>
-            <div class="step" onclick="switchTab(this, 'ex-${c.num}')">② O que fazer / não fazer</div>
             <div class="step active" onclick="switchTab(this, '${objId}')">① Objetivo</div>
             <div class="step" onclick="switchTab(this, '${exId}')">② O que fazer / não fazer</div>
           </div>
-          <div class="panel active" id="obj-${c.num}">
           <div class="panel active" id="${objId}">
             <div class="obj-grid">
               <div class="obj-box" style="grid-column: 1 / -1;">
                 <div class="obj-box-label">Objetivo do critério</div>
-@@ -297,7 +439,7 @@ <h1>Formulário de Monitoria<br>de Qualidade</h1>
+                <p>${c.objetivo}</p>
+              </div>
+              <div class="obj-box">
+                <div class="obj-box-label">Definição operacional</div>
+                <p>${c.definicao}</p>
+              </div>
+              <div class="obj-box">
+                <div class="obj-box-label">Notas</div>
+                <div class="score-row">
+                  <div class="score-box pos">
+                    <span class="score-icon">✅</span>
+                    <div><div class="score-val">${c.pts_pos}</div><div class="score-cond">${c.valor_padrao}</div></div>
+                  </div>
+                  <div class="score-box neg">
+                    <span class="score-icon">❌</span>
+                    <div><div class="score-val">${c.pts_neg}</div><div class="score-cond">${c.var_neg}</div></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="panel" id="ex-${c.num}">
           <div class="panel" id="${exId}">
             <div class="ex-grid">
               <div class="ex-box fazer">
                 <div class="ex-label fazer">✅ O que fazer</div>
-@@ -346,31 +488,17 @@ <h1>Formulário de Monitoria<br>de Qualidade</h1>
+                <div class="ex-text">${c.fazer}</div>
+              </div>
+              <div class="ex-box nao">
+                <div class="ex-label nao">❌ O que não fazer</div>
+                <div class="ex-text">${c.nao_fazer}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function toggleCard(trigger) {
+  const card = trigger.closest('.card');
+  const body = card.querySelector('.card-body');
+  const isOpen = card.classList.contains('open');
+  if (isOpen) {
+    body.style.maxHeight = '0';
+    card.classList.remove('open');
+  } else {
+    body.style.maxHeight = body.scrollHeight + 'px';
+    card.classList.add('open');
+    setTimeout(() => { body.style.maxHeight = body.scrollHeight + 'px'; }, 10);
+  }
+}
+
+function switchTab(stepEl, panelId) {
+  const bodyInner = stepEl.closest('.card-body-inner');
+  const card = stepEl.closest('.card');
+  bodyInner.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  bodyInner.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  stepEl.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+  const body = card.querySelector('.card-body');
+  body.style.maxHeight = 'none';
+  body.style.maxHeight = body.scrollHeight + 'px';
+}
+
+function filterCards(cat, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   if (cat === 'all') {
     btn.classList.add('active');
-    document.querySelectorAll('.card').forEach(card => { card.style.display = 'block'; });
     document.querySelectorAll('#cards-container .card').forEach(card => { card.style.display = 'block'; });
   } else {
     btn.classList.add('active');
-    document.querySelectorAll('.card').forEach(card => {
     document.querySelectorAll('#cards-container .card').forEach(card => {
       card.style.display = card.dataset.cat === cat ? 'block' : 'none';
     });
   }
 }
 
-buildCards();
-
-(function() {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.filter-btn.conduao').classList.add('active');
-  document.querySelectorAll('.card').forEach(card => {
-    card.style.display = card.dataset.cat === 'conduao' ? 'block' : 'none';
-  });
-  const first = document.querySelector('.card[data-cat="conduao"]');
-  if (first) {
-    const body = first.querySelector('.card-body');
-    first.classList.add('open');
-    body.style.maxHeight = '9999px';
-    setTimeout(() => { body.style.maxHeight = body.scrollHeight + 'px'; }, 50);
-  }
-})();
 // Initialize
 switchChannel('sincrono');
 </script>
